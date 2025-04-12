@@ -39,7 +39,7 @@ class ExerciseService {
       await saveExercises(exercises);
     }
   }
-
+  
   Future<void> deleteExercise(int index) async 
   {
     final exercises = await loadExercises();

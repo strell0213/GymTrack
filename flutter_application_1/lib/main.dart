@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => ExerciseViewModel(ExerciseService()),
       child: MaterialApp(
-        title: 'Kachalka',
+        title: 'GymTrack',
         theme: ThemeData(),
         home: const Mainwidget(),
       ),
