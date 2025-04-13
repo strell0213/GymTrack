@@ -118,7 +118,7 @@ class _ExerciseListBody extends StatelessWidget {
                     const SizedBox(width: 25),
                     IconButton(
                       icon: const Icon(Icons.remove),
-                      onPressed: () { //test
+                      onPressed: () { 
                         exercise.count-=1;
                         context.read<ExerciseViewModel>().updateExercise(exercise);
                       },
