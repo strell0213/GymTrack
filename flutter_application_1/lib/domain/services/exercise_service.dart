@@ -30,16 +30,24 @@ class ExerciseService {
     await saveExercises(exercises);
   }
 
-  Future<void> updateExercise(int index, Exercise updatedExercise) async 
+  Future<void> updateExercise(Exercise updatedExercise) async 
   {
     final exercises = await loadExercises();
-    if (index >= 0 && index < exercises.length) 
+    for(int i = 0; i < exercises.length; i++)
     {
-      exercises[index] = updatedExercise;
-      await saveExercises(exercises);
+      if(exercises[i].name == updatedExercise.name)
+      {
+        exercises[i] = updatedExercise;
+        await saveExercises(exercises);
+      } 
     }
+    // if (index >= 0 && index < exercises.length) 
+    // {
+    //   exercises[index] = updatedExercise;
+    //   await saveExercises(exercises);
+    // }
   }
-  
+
   Future<void> deleteExercise(int index) async 
   {
     final exercises = await loadExercises();

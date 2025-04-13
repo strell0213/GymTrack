@@ -58,10 +58,10 @@ class ExerciseViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> updateExercise(int index, Exercise updated) async {
+  Future<void> updateExercise(Exercise updated) async {
     _setLoading(true);
     try {
-      await _service.updateExercise(index, updated);
+      await _service.updateExercise(updated);
       await loadExercises();
     } catch (e) {
       _setError(e.toString());
