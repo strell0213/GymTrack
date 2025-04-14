@@ -13,7 +13,23 @@ class Mainwidget extends StatelessWidget {
       length: 7, // 7 дней недели
       child: Scaffold(
         appBar: AppBar(
-          title: const Center(child: Text('GymTrack')),
+          title: Row(
+            children: [
+              IconButton(onPressed: (){}, icon: Icon(Icons.settings)),
+              Expanded(child: Center(child: Text('GymTrack'))),
+              IconButton(onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ChangeNotifierProvider(
+                      create: (_) => AddViewModel(),
+                      child: AddWidget(),
+                    ),
+                  ),
+            );
+              }, icon: Icon(Icons.add))
+            ],
+          ),
           bottom: const TabBar(
             isScrollable: false,
             tabs: [
@@ -37,20 +53,6 @@ class Mainwidget extends StatelessWidget {
             _ExerciseListBody(day: 'sat'),
             _ExerciseListBody(day: 'sun'),
           ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => ChangeNotifierProvider(
-                  create: (_) => AddViewModel(),
-                  child: AddWidget(),
-                ),
-              ),
-            );
-          },
-          child: const Icon(Icons.add),
         ),
       ),
     );
