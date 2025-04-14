@@ -15,7 +15,7 @@ class Mainwidget extends StatelessWidget {
         appBar: AppBar(
           title: const Center(child: Text('GymTrack')),
           bottom: const TabBar(
-            isScrollable: true,
+            isScrollable: false,
             tabs: [
               Tab(text: 'Пн'),
               Tab(text: 'Вт'),
@@ -81,7 +81,7 @@ class _ExerciseListBody extends StatelessWidget {
 
     return ListView.builder(
       itemCount: filteredExercises.length,
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(5),
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       itemBuilder: (BuildContext context, int index){
         final exercise = filteredExercises[index];
@@ -89,7 +89,7 @@ class _ExerciseListBody extends StatelessWidget {
     
         return Container(
           margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: Colors.white, // Цвет фона
             border: Border.all(color: Colors.grey, width: 2), // Обводка
