@@ -1,8 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/ui/widgets/add_model.dart';
 import 'package:flutter_application_1/ui/widgets/add_widget.dart';
+import 'package:flutter_application_1/ui/widgets/detail_widget.dart';
 import 'package:flutter_application_1/ui/widgets/main_model.dart';
+import 'package:flutter_application_1/ui/widgets/settings_widget.dart';
+import 'package:flutter_application_1/ui/widgets/themeviewmodel.dart';
 import 'package:provider/provider.dart';
+
+void _showDeleteConfirmationDialog(BuildContext context, VoidCallback onConfirm) {
+  showDialog(
+    context: context,
+    builder: (BuildContext dialogContext) {
+      return AlertDialog(
+        title: const Text('Удаление'),
+        content: const Text('Вы уверены, что хотите удалить?'),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Отмена'),
+            onPressed: () {
+              Navigator.of(dialogContext).pop(); // Закрыть диалог
+            },
+          ),
+          TextButton(
+            child: const Text('Удалить', style: TextStyle(color: Colors.red)),
+            onPressed: () {
+              Navigator.of(dialogContext).pop(); // Закрыть диалог
+              onConfirm(); // Выполнить удаление
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
 
 class Mainwidget extends StatelessWidget {
   const Mainwidget({super.key});
@@ -15,7 +45,14 @@ class Mainwidget extends StatelessWidget {
         appBar: AppBar(
           title: Row(
             children: [
-              IconButton(onPressed: (){}, icon: Icon(Icons.settings)),
+              IconButton(onPressed: (){
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(
+                    builder: (context) => SettingsWidget(),
+                  )
+                );
+              }, icon: Icon(Icons.settings)),
               Expanded(child: Center(child: Text('GymTrack'))),
               IconButton(onPressed: () async {
                 await Navigator.push(
@@ -66,6 +103,7 @@ class _ExerciseListBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<ExerciseViewModel>().state;
+    final themeVM = Provider.of<ThemeViewModel>(context);
 
     final filteredExercises = state.exercises.where((e) => e.day == day).toList();
 
@@ -93,7 +131,7 @@ class _ExerciseListBody extends StatelessWidget {
           margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: Colors.white, // Цвет фона
+            color: themeVM.isDarkTheme ? Colors.black : Colors.white,// Цвет фона
             border: Border.all(color: Colors.grey, width: 2), // Обводка
             borderRadius: BorderRadius.circular(12), // Скруглённые углы
             boxShadow: [
@@ -138,7 +176,7 @@ class _ExerciseListBody extends StatelessWidget {
                 Row(
                   children: [
                     const Text('Вес'),
-                    const SizedBox(width: 83),
+                    const SizedBox(width: 84),
                     IconButton(
                       icon: const Icon(Icons.remove),
                       onPressed: () {
@@ -158,10 +196,20 @@ class _ExerciseListBody extends StatelessWidget {
                 ),
               ],
             ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailWidget(curExercise: exercise),
+                ),
+              );
+            },
             trailing: IconButton(
               icon: const Icon(Icons.delete),
               onPressed: () {
-                context.read<ExerciseViewModel>().deleteExercise(index);
+                _showDeleteConfirmationDialog(context, () {
+                  context.read<ExerciseViewModel>().deleteExercise(exercise);
+                });
               },
             ),
           ),
@@ -170,4 +218,6 @@ class _ExerciseListBody extends StatelessWidget {
     );
   }
 }
+
+
 

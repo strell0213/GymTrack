@@ -36,7 +36,7 @@ class _AddWidgetState extends State<AddWidget> {
     }
 
     if (isValid) {
-      mm.addExercise(Exercise(text, 0, 0, am.getDayForAdd(selectedDay)));
+      mm.addExercise(Exercise(text, 0, 0, am.getDayForAdd(selectedDay),''));
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

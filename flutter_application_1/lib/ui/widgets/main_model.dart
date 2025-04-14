@@ -68,10 +68,10 @@ class ExerciseViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> deleteExercise(int index) async {
+  Future<void> deleteExercise(Exercise deleteExercise) async {
     _setLoading(true);
     try {
-      await _service.deleteExercise(index);
+      await _service.deleteExercise(deleteExercise);
       await loadExercises();
     } catch (e) {
       _setError(e.toString());

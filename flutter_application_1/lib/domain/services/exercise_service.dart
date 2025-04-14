@@ -41,20 +41,18 @@ class ExerciseService {
         await saveExercises(exercises);
       } 
     }
-    // if (index >= 0 && index < exercises.length) 
-    // {
-    //   exercises[index] = updatedExercise;
-    //   await saveExercises(exercises);
-    // }
   }
 
-  Future<void> deleteExercise(int index) async 
+  Future<void> deleteExercise(Exercise deleteExercise) async 
   {
     final exercises = await loadExercises();
-    if (index >= 0 && index < exercises.length) 
+    for(int i = 0; i < exercises.length; i++)
     {
-      exercises.removeAt(index);
-      await saveExercises(exercises);
+      if(exercises[i].name == deleteExercise.name)
+      {
+        exercises.removeAt(i);
+        await saveExercises(exercises);
+      } 
     }
   }
 }
