@@ -159,7 +159,7 @@ class _ExerciseListBody extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.remove),
                       onPressed: () { 
-                        exercise.count-=1;
+                        exercise.count-=5;
                         context.read<ExerciseViewModel>().updateExercise(exercise);
                       },
                     ),
@@ -167,7 +167,7 @@ class _ExerciseListBody extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.add),
                       onPressed: () {
-                        exercise.count+=1;
+                        exercise.count+=5;
                         context.read<ExerciseViewModel>().updateExercise(exercise);
                       },
                     ),
@@ -180,7 +180,7 @@ class _ExerciseListBody extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.remove),
                       onPressed: () {
-                        exercise.weight-=1;
+                        exercise.weight-=5;
                         context.read<ExerciseViewModel>().updateExercise(exercise);
                       },
                     ),
@@ -188,7 +188,7 @@ class _ExerciseListBody extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.add),
                       onPressed: () {
-                        exercise.weight+=1;
+                        exercise.weight+=5;
                         context.read<ExerciseViewModel>().updateExercise(exercise);
                       },
                     ),
