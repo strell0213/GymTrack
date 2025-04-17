@@ -34,6 +34,10 @@ class Exercise
   String get day => _day;
   String get howDid => _howDid;
 
+  set name(String value){
+    _name = value;
+  }
+
   set weight(int value) {
     _weight = value < 0 ? 0 : value; // Пример с валидацией
   }

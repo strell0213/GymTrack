@@ -46,26 +46,37 @@ class Mainwidget extends StatelessWidget {
         appBar: AppBar(
           title: Row(
             children: [
-              IconButton(onPressed: (){
-                Navigator.push(
-                  context, 
-                  MaterialPageRoute(
-                    builder: (context) => SettingsWidget(),
-                  )
-                );
-              }, icon: Icon(Icons.settings)),
+              IconButton(
+                onPressed: (){
+                  Navigator.push(
+                    context, 
+                    MaterialPageRoute(
+                      builder: (context) => SettingsWidget(),
+                    )
+                  );
+                }, 
+                icon: Icon(Icons.settings)
+              ),
+              SizedBox(width: 48,),
               Expanded(child: Center(child: Text('GymTrack'))),
-              IconButton(onPressed: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => ChangeNotifierProvider(
-                      create: (_) => AddViewModel(),
-                      child: AddWidget(),
+              IconButton(
+                onPressed: () {}, 
+                icon: Icon(Icons.analytics_outlined)
+              ),
+              IconButton(
+                onPressed: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ChangeNotifierProvider(
+                        create: (_) => AddViewModel(),
+                        child: AddWidget(),
+                      ),
                     ),
-                  ),
-            );
-              }, icon: Icon(Icons.add))
+                  );
+                },
+                icon: Icon(Icons.add)
+              )
             ],
           ),
           bottom: const TabBar(

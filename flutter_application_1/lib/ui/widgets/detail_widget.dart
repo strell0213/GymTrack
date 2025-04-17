@@ -36,6 +36,8 @@ class _InfoDetailWidgetState extends State<InfoDetailWidget> {
     final viewModel = context.watch<DetailViewModel>();
     return Column(
       children: [
+        NameWidget(viewModel: viewModel),
+        SizedBox(height: 25,),
         CountWidget(viewModel: viewModel,),
         SizedBox(height: 25,),
         WeightWidget(viewModel: viewModel),
@@ -140,6 +142,37 @@ class CountWidget extends StatelessWidget {
           alignment: Alignment.centerLeft,
           child: TextButton.icon(
             onPressed: () => viewModel.saveCount(context),
+            icon: const Icon(Icons.save),
+            label: const Text('Сохранить'),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class NameWidget extends StatelessWidget {
+  const NameWidget({
+    super.key,
+    required this.viewModel,
+  });
+  final DetailViewModel viewModel;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        TextField(
+          controller: viewModel.nameController,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            labelText: 'Введите наименование',
+          ),
+        ),
+        SizedBox(height: 5,),
+        Container(
+          alignment: Alignment.centerLeft,
+          child: TextButton.icon(
+            onPressed: () => viewModel.saveName(context),
             icon: const Icon(Icons.save),
             label: const Text('Сохранить'),
           ),
