@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/ui/widgets/add_model.dart';
 import 'package:flutter_application_1/ui/widgets/add_widget.dart';
+import 'package:flutter_application_1/ui/widgets/detail_model.dart';
 import 'package:flutter_application_1/ui/widgets/detail_widget.dart';
 import 'package:flutter_application_1/ui/widgets/main_model.dart';
 import 'package:flutter_application_1/ui/widgets/settings_widget.dart';
@@ -200,7 +201,13 @@ class _ExerciseListBody extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => DetailWidget(curExercise: exercise),
+                  builder: (context) => ChangeNotifierProvider(
+                    create: (_) => DetailViewModel(
+                      exercise, 
+                      context.read<ExerciseViewModel>(),
+                    ),
+                    child: DetailWidget(), // <- сам виджет ничего не принимает
+                  ),
                 ),
               );
             },
