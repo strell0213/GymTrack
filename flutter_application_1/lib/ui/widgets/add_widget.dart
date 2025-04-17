@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/domain/entity/exercise.dart';
 import 'package:flutter_application_1/ui/widgets/add_model.dart';
-import 'package:flutter_application_1/ui/widgets/main_model.dart';
 import 'package:provider/provider.dart';
 
 class AddWidget extends StatefulWidget {
@@ -12,41 +10,9 @@ class AddWidget extends StatefulWidget {
 }
 
 class _AddWidgetState extends State<AddWidget> {
-  final TextEditingController _searchController = TextEditingController();
-  String? selectedDay;
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  void _addExercise() {
-    final mm = context.read<ExerciseViewModel>();
-    final am = context.read<AddViewModel>();
-
-    final text = _searchController.text;
-    final isValid = am.checkControllerText(text);
-
-    if (selectedDay == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Выберите день недели!')),
-      );
-      return;
-    }
-
-    if (isValid) {
-      mm.addExercise(Exercise(text, 0, 0, am.getDayForAdd(selectedDay),''));
-      Navigator.pop(context);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Вы ничего не ввели!')),
-      );
-      return;
-    }
-  }
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<AddViewModel>();
     return Scaffold(
       appBar: AppBar(title: const Text('Добавьте упражнение')),
       body: Padding(
@@ -54,7 +20,7 @@ class _AddWidgetState extends State<AddWidget> {
         child: Column(
           children: [
             TextField(
-              controller: _searchController,
+              controller: viewModel.searchController,
               decoration: const InputDecoration(
                 hintText: 'Введите название упражнения',
                 border: OutlineInputBorder(),
@@ -63,12 +29,18 @@ class _AddWidgetState extends State<AddWidget> {
             const SizedBox(height: 30),
             DayDropdown(
               onChanged: (value) {
-                selectedDay = value;
+                viewModel.selectedDay = value;
               },
+            ),
+            const SizedBox(height: 30),
+            TypeDropdown(
+              onChanged: (value){
+                viewModel.selectedType = value;
+              }
             ),
             const SizedBox(height: 15),
             TextButton.icon(
-              onPressed: _addExercise,
+              onPressed: () => viewModel.addExercise(context),
               icon: const Icon(Icons.add),
               label: const Text('Добавить'),
             ),
@@ -109,6 +81,54 @@ class _DayDropdownState extends State<DayDropdown> {
       onChanged: (value) {
         setState(() {
           _selectedDay = value;
+        });
+        if (value != null) {
+          widget.onChanged(value);
+        }
+      },
+    );
+  }
+}
+
+class TypeDropdown extends StatefulWidget {
+  final Function(String) onChanged;
+  const TypeDropdown({super.key, required this.onChanged});
+
+  @override
+  State<TypeDropdown> createState() => _TypeDropdownState();
+}
+
+class _TypeDropdownState extends State<TypeDropdown> {
+  final List<String> _types = ['Без типа', 'Ноги', 'Руки', 'Плечи', 'Спина', 'Грудь', 'Кор (Пресс)'];
+  String? _selectedType;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedType = _types[0]; // Установка значения по умолчанию
+    // Можно сразу передать его родителю, если нужно
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.onChanged(_selectedType!);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButtonFormField<String>(
+      decoration: const InputDecoration(
+        labelText: 'Выберите тип упражнения',
+        border: OutlineInputBorder(),
+      ),
+      value: _selectedType,
+      items: _types.map((day) {
+        return DropdownMenuItem(
+          value: day,
+          child: Text(day),
+        );
+      }).toList(),
+      onChanged: (value) {
+        setState(() {
+          _selectedType = value;
         });
         if (value != null) {
           widget.onChanged(value);

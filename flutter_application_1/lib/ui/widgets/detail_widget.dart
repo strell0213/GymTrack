@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_1/domain/entity/exercise.dart';
 import 'package:flutter_application_1/ui/widgets/detail_model.dart';
-import 'package:flutter_application_1/ui/widgets/main_model.dart';
 import 'package:provider/provider.dart';
 
 class DetailWidget extends StatelessWidget {

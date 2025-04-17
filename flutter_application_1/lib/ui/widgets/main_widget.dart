@@ -40,6 +40,7 @@ class Mainwidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final exerciseViewModel = context.watch<ExerciseViewModel>();
     return DefaultTabController(
       length: 7, // 7 дней недели
       child: Scaffold(
@@ -69,7 +70,7 @@ class Mainwidget extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (_) => ChangeNotifierProvider(
-                        create: (_) => AddViewModel(),
+                        create: (_) => AddViewModel(exerciseViewModel),
                         child: AddWidget(),
                       ),
                     ),
