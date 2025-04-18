@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/entity/exercise.dart';
 import 'package:flutter_application_1/domain/services/exercise_service.dart';
+import 'package:flutter_application_1/domain/services/history_service.dart';
 
 class ExerciseViewModelState {
   final List<Exercise> exercises;
@@ -29,8 +30,9 @@ class ExerciseViewModelState {
 
 class ExerciseViewModel extends ChangeNotifier {
   final ExerciseService _service;
+  final HistoryService _historyService;
 
-  ExerciseViewModel(this._service) {
+  ExerciseViewModel(this._service, this._historyService) {
     loadExercises();
   }
 
@@ -61,6 +63,7 @@ class ExerciseViewModel extends ChangeNotifier {
   Future<void> updateExercise(Exercise updated) async {
     try {
       await _service.updateExercise(updated);
+      await _historyService.addExercise(updated);
       notifyListeners();
     } catch (e) {
       _setError(e.toString());

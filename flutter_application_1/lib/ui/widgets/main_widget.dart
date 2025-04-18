@@ -58,12 +58,7 @@ class Mainwidget extends StatelessWidget {
                 }, 
                 icon: Icon(Icons.settings)
               ),
-              SizedBox(width: 48,),
               Expanded(child: Center(child: Text('GymTrack'))),
-              IconButton(
-                onPressed: () {}, 
-                icon: Icon(Icons.analytics_outlined)
-              ),
               IconButton(
                 onPressed: () async {
                   await Navigator.push(

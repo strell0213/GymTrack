@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_1/domain/services/history_service.dart';
 import 'package:flutter_application_1/ui/widgets/detail_model.dart';
+import 'package:flutter_application_1/ui/widgets/statistic_model.dart';
+import 'package:flutter_application_1/ui/widgets/statistic_widget.dart';
 import 'package:provider/provider.dart';
 
 class DetailWidget extends StatelessWidget {
@@ -10,7 +13,25 @@ class DetailWidget extends StatelessWidget {
     final viewModel = context.watch<DetailViewModel>();
     return Scaffold(
       appBar: AppBar(
-        title: Text(viewModel.exercise.name),
+        title: Row(
+          children: [
+            Expanded(child: Center(child: Text(viewModel.exercise.name))),
+            IconButton(
+                onPressed: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ChangeNotifierProvider(
+                        create: (_) => StatisticViewModel(viewModel.exercise, HistoryService()),
+                        child: StatisticWidget(),
+                      ),
+                    ),
+                  );
+                },
+                icon: Icon(Icons.analytics_outlined)
+              )
+          ],
+        ),
       ),
       body: Padding(
         padding: EdgeInsets.all(15),

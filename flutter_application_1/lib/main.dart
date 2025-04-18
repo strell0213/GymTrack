@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/services/exercise_service.dart';
+import 'package:flutter_application_1/domain/services/history_service.dart';
 import 'package:flutter_application_1/ui/widgets/main_model.dart';
 import 'package:flutter_application_1/ui/widgets/main_widget.dart';
 import 'package:flutter_application_1/ui/widgets/themeviewmodel.dart';
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ExerciseViewModel(ExerciseService())),
+        ChangeNotifierProvider(create: (_) => ExerciseViewModel(ExerciseService(), HistoryService())),
         ChangeNotifierProvider(create: (_) => ThemeViewModel()),
       ],
       child: const MyAppWidget(),
