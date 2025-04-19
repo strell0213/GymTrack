@@ -16,7 +16,7 @@ class HistoryService {
     return jsonList.map((e) => History.fromJson(e)).toList();
   }
 
-  Future<void> saveExercises(List<History> listHistory) async 
+  Future<void> saveHistory(List<History> listHistory) async 
   {
     final prefs = await SharedPreferences.getInstance();
     final jsonString =
@@ -24,11 +24,40 @@ class HistoryService {
     await prefs.setString(_key, jsonString);
   }
 
-  Future<void> addExercise(Exercise exercise) async 
+  Future<void> addHistory(Exercise exercise) async 
   {
     final item = History(exercise.name, exercise.weight, exercise.count, DateTime.now().toString());
     final listHistory = await loadHistory();
     listHistory.add(item);
-    await saveExercises(listHistory);
+    await saveHistory(listHistory);
+  }
+
+  Future<void> deleteHistory(Exercise deleteExercise) async 
+  {
+    final listHistory = await loadHistory();
+    for(int i = 0; i < listHistory.length; i++)
+    {
+      if(listHistory[i].name == deleteExercise.name && hasTodayEntry(listHistory, deleteExercise.name))
+      {
+        listHistory.removeAt(i);
+        await saveHistory(listHistory);
+      } 
+    }
+  }
+
+  bool hasTodayEntry(List<History> historyList, String exerciseName) {
+    final today = DateTime.now();
+
+    return historyList.any((history) {
+      if (history.name != exerciseName) return false;
+
+      // Преобразуем строку в DateTime
+      final date = history.createAt;
+
+      // Сравниваем по дню, месяцу и году
+      return date.year == today.year &&
+            date.month == today.month &&
+            date.day == today.day;
+    });
   }
 }

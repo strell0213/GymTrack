@@ -63,7 +63,6 @@ class ExerciseViewModel extends ChangeNotifier {
   Future<void> updateExercise(Exercise updated) async {
     try {
       await _service.updateExercise(updated);
-      await _historyService.addExercise(updated);
       notifyListeners();
     } catch (e) {
       _setError(e.toString());
@@ -76,6 +75,40 @@ class ExerciseViewModel extends ChangeNotifier {
       await _service.deleteExercise(deleteExercise);
       await loadExercises();
     } catch (e) {
+      _setError(e.toString());
+    }
+  }
+
+  Future<void> addHistory(Exercise exercise) async{
+    try{
+      await _historyService.addHistory(exercise);
+      notifyListeners();
+    } catch (e) {
+      _setError(e.toString());
+    }
+  }
+
+  Future<void> deleteHistory(Exercise exercise) async{
+    try{
+      _historyService.deleteHistory(exercise);
+      notifyListeners();
+    } catch(e){
+      _setError(e.toString());
+    }
+  }
+
+  Future<void> checkReadyExersice(List<Exercise> exerciseList) async { 
+    try {
+      final historyList = await _historyService.loadHistory();
+      for(int i = 0; i < exerciseList.length; i++)
+      {
+        final ex = exerciseList[i];
+        final isDone = _historyService.hasTodayEntry(historyList, ex.name);
+        ex.isDone = isDone;
+      }
+
+      notifyListeners();
+    } catch(e) {
       _setError(e.toString());
     }
   }

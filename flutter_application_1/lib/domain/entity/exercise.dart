@@ -6,6 +6,7 @@ class Exercise
   String _day;
   String _howDid;
   String _typeExercise;
+  bool isDone = false;
 
   Exercise(this._name, this._count, this._weight, this._day,this._howDid,this._typeExercise);
 

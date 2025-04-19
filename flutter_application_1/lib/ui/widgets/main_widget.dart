@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/domain/entity/exercise.dart';
 import 'package:flutter_application_1/ui/widgets/add_model.dart';
 import 'package:flutter_application_1/ui/widgets/add_widget.dart';
 import 'package:flutter_application_1/ui/widgets/detail_model.dart';
@@ -133,18 +134,15 @@ class _ExerciseListBody extends StatelessWidget {
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       itemBuilder: (BuildContext context, int index){
         final exercise = filteredExercises[index];
-        // return _ExerciseListRowWidget(exercise: exercise, indexExercise: index);
-    
         return Container(
           margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: themeVM.isDarkTheme ? Colors.black : Colors.white,// Цвет фона
             border: Border.all(color: Colors.grey, width: 2), // Обводка
             borderRadius: BorderRadius.circular(12), // Скруглённые углы
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
+                color: exercise.isDone ? Colors.green : Colors.grey.withOpacity(0.2),
                 spreadRadius: 2,
                 blurRadius: 5,
                 offset: const Offset(0, 3), // Тень
@@ -152,56 +150,11 @@ class _ExerciseListBody extends StatelessWidget {
             ],
           ),
           child: ListTile(
-            title: Text(
-              exercise.name,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            title: _TitleListTile(exercise: exercise),
+            subtitle: Row(
               children: [
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    const Text('Повторений'),
-                    const SizedBox(width: 25),
-                    IconButton(
-                      icon: const Icon(Icons.remove),
-                      onPressed: () { 
-                        exercise.count-=5;
-                        context.read<ExerciseViewModel>().updateExercise(exercise);
-                      },
-                    ),
-                    Text(exercise.count.toString()),
-                    IconButton(
-                      icon: const Icon(Icons.add),
-                      onPressed: () {
-                        exercise.count+=5;
-                        context.read<ExerciseViewModel>().updateExercise(exercise);
-                      },
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Text('Вес'),
-                    const SizedBox(width: 84),
-                    IconButton(
-                      icon: const Icon(Icons.remove),
-                      onPressed: () {
-                        exercise.weight-=5;
-                        context.read<ExerciseViewModel>().updateExercise(exercise);
-                      },
-                    ),
-                    Text(exercise.weight.toString()), // поправил на вес
-                    IconButton(
-                      icon: const Icon(Icons.add),
-                      onPressed: () {
-                        exercise.weight+=5;
-                        context.read<ExerciseViewModel>().updateExercise(exercise);
-                      },
-                    ),
-                  ],
-                ),
+                _LeftButtons(exercise: exercise),
+                _RightButtons(exercise: exercise),
               ],
             ),
             onTap: () {
@@ -218,17 +171,161 @@ class _ExerciseListBody extends StatelessWidget {
                 ),
               );
             },
-            trailing: IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () {
-                _showDeleteConfirmationDialog(context, () {
-                  context.read<ExerciseViewModel>().deleteExercise(exercise);
-                });
-              },
-            ),
+            // trailing: _RightButtons(exercise: exercise),
           ),
         );
       }
+    );
+  }
+}
+
+class _LeftButtons extends StatelessWidget {
+  const _LeftButtons({
+    required this.exercise,
+  });
+
+  final Exercise exercise;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _CountWidget(exercise: exercise),
+          _WeightWidget(exercise: exercise),
+          SizedBox(height: 5,),
+        ],
+      ),
+    );
+  }
+}
+
+class _RightButtons extends StatelessWidget {
+  const _RightButtons({
+    required this.exercise,
+  });
+
+  final Exercise exercise;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only( top: 30.0),
+      child: Transform.scale(
+        scale: 1.5,
+        child: IconButton(
+          icon: const Icon(Icons.delete),
+          onPressed: () {
+            _showDeleteConfirmationDialog(context, () {
+              context.read<ExerciseViewModel>().deleteExercise(exercise);
+            });
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _TitleListTile extends StatelessWidget {
+  const _TitleListTile({
+    required this.exercise,
+  });
+
+  final Exercise exercise;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            exercise.name,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 5.0),
+          child: Transform.scale(
+            scale: 1.5,
+            child: Checkbox(
+              value: exercise.isDone,
+              onChanged: (val){
+                exercise.isDone = val!;
+                if(val == false) {context.read<ExerciseViewModel>().deleteHistory(exercise);}
+                else {context.read<ExerciseViewModel>().addHistory(exercise);}
+              },
+              shape: const CircleBorder(), // Круглая форма
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _WeightWidget extends StatelessWidget {
+  const _WeightWidget({
+    required this.exercise,
+  });
+
+  final Exercise exercise;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        const Text('Вес'),
+        const SizedBox(width: 84),
+        IconButton(
+          icon: const Icon(Icons.remove),
+          onPressed: () {
+            exercise.weight-=5;
+            context.read<ExerciseViewModel>().updateExercise(exercise);
+          },
+        ),
+        Text(exercise.weight.toString()), // поправил на вес
+        IconButton(
+          icon: const Icon(Icons.add),
+          onPressed: () {
+            exercise.weight+=5;
+            context.read<ExerciseViewModel>().updateExercise(exercise);
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _CountWidget extends StatelessWidget {
+  const _CountWidget({
+    required this.exercise,
+  });
+
+  final Exercise exercise;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        const Text('Повторений'),
+        const SizedBox(width: 25),
+        IconButton(
+          icon: const Icon(Icons.remove),
+          onPressed: () { 
+            exercise.count-=5;
+            context.read<ExerciseViewModel>().updateExercise(exercise);
+          },
+        ),
+        Text(exercise.count.toString()),
+        IconButton(
+          icon: const Icon(Icons.add),
+          onPressed: () {
+            exercise.count+=5;
+            context.read<ExerciseViewModel>().updateExercise(exercise);
+          },
+        ),
+      ],
     );
   }
 }
