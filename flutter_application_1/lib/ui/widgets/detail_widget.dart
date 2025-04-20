@@ -105,9 +105,11 @@ class HowDidWidget extends StatelessWidget {
         TextField(
           maxLines: 10,
           controller: viewModel.howDidController,
+          // textAlignVertical: TextAlignVertical.top, // <-- Важно!
           decoration: InputDecoration(
             border: OutlineInputBorder(),
             labelText: 'Как делать упражнение?',
+            alignLabelWithHint: true, // <-- Это нужно, чтобы label не плавал в центре
           ),
         ),
         SizedBox(height: 5,),
