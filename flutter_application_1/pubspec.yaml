@@ -39,7 +39,7 @@ dev_dependencies:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/icon/app_icon.png" # путь к твоей иконке
+  image_path: "assets/icon/app_icon1.png" # путь к твоей иконке
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
