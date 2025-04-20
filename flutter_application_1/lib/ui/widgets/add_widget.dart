@@ -15,37 +15,50 @@ class _AddWidgetState extends State<AddWidget> {
     final viewModel = context.watch<AddViewModel>();
     return Scaffold(
       appBar: AppBar(title: const Text('Добавьте упражнение')),
-      body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: viewModel.searchController,
-              decoration: const InputDecoration(
-                hintText: 'Введите название упражнения',
-                border: OutlineInputBorder(),
-              ),
+      body: _AddWidgetMain(viewModel: viewModel),
+    );
+  }
+}
+
+class _AddWidgetMain extends StatelessWidget {
+  const _AddWidgetMain({
+    required this.viewModel,
+  });
+
+  final AddViewModel viewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Column(
+        children: [
+          TextField(
+            controller: viewModel.searchController,
+            decoration: const InputDecoration(
+              hintText: 'Введите название упражнения',
+              border: OutlineInputBorder(),
             ),
-            const SizedBox(height: 30),
-            DayDropdown(
-              onChanged: (value) {
-                viewModel.selectedDay = value;
-              },
-            ),
-            const SizedBox(height: 30),
-            TypeDropdown(
-              onChanged: (value){
-                viewModel.selectedType = value;
-              }
-            ),
-            const SizedBox(height: 15),
-            TextButton.icon(
-              onPressed: () => viewModel.addExercise(context),
-              icon: const Icon(Icons.add),
-              label: const Text('Добавить'),
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 30),
+          DayDropdown(
+            onChanged: (value) {
+              viewModel.selectedDay = value;
+            },
+          ),
+          const SizedBox(height: 30),
+          TypeDropdown(
+            onChanged: (value){
+              viewModel.selectedType = value;
+            }
+          ),
+          const SizedBox(height: 15),
+          TextButton.icon(
+            onPressed: () => viewModel.addExercise(context),
+            icon: const Icon(Icons.add),
+            label: const Text('Добавить'),
+          ),
+        ],
       ),
     );
   }

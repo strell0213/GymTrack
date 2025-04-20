@@ -28,7 +28,7 @@ class Exercise
       json['weight'],
       json['day'],
       json['howdid'] ?? '',
-      json['typeExercise'] ?? ''
+      json['typeExercice'] ?? ''
     );
   }
 

@@ -4,6 +4,7 @@ import 'package:flutter_application_1/domain/services/history_service.dart';
 import 'package:flutter_application_1/ui/widgets/detail_model.dart';
 import 'package:flutter_application_1/ui/widgets/statistic_model.dart';
 import 'package:flutter_application_1/ui/widgets/statistic_widget.dart';
+import 'package:flutter_application_1/ui/widgets/themeviewmodel.dart';
 import 'package:provider/provider.dart';
 
 class DetailWidget extends StatelessWidget {
@@ -11,11 +12,17 @@ class DetailWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<DetailViewModel>();
+    final themeVM = Provider.of<ThemeViewModel>(context);
     return Scaffold(
       appBar: AppBar(
         title: Row(
           children: [
+            SizedBox(width: 48, height: 48,),
             Expanded(child: Center(child: Text(viewModel.exercise.name))),
+            IconButton(
+              onPressed: (){}, 
+              icon: Icon(Icons.star_outline_sharp)
+            ),
             IconButton(
                 onPressed: () async {
                   await Navigator.push(
@@ -33,9 +40,25 @@ class DetailWidget extends StatelessWidget {
           ],
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(15),
-        child: InfoDetailWidget(),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Padding(
+          padding: EdgeInsets.all(15),
+          child: InfoDetailWidget(),
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.all(35),
+        child: ElevatedButton(
+          onPressed: (){}, 
+          child: Text('Сохранить', 
+            style: TextStyle(
+              fontWeight: FontWeight.bold, 
+              color: themeVM.isDarkTheme ? Colors.white : Colors.black,// Цвет фона
+              fontSize: 18
+            ),
+          )
+        ),
       ),
     );
   }
@@ -57,9 +80,7 @@ class _InfoDetailWidgetState extends State<InfoDetailWidget> {
       children: [
         NameWidget(viewModel: viewModel),
         SizedBox(height: 25,),
-        CountWidget(viewModel: viewModel,),
-        SizedBox(height: 25,),
-        WeightWidget(viewModel: viewModel),
+        WeightCountWidget(viewModel: viewModel),
         SizedBox(height: 25,),
         HowDidWidget(viewModel: viewModel),
         SizedBox(height: 25,),
@@ -87,84 +108,48 @@ class HowDidWidget extends StatelessWidget {
           ),
         ),
         SizedBox(height: 5,),
-        Container(
-          alignment: Alignment.centerLeft,
-          child: TextButton.icon(
-            onPressed: () => viewModel.saveHowDid(context),
-            icon: const Icon(Icons.save),
-            label: const Text('Сохранить'),
-          ),
-        ),
       ],
     );
   }
 }
 
-class WeightWidget extends StatelessWidget {
-  const WeightWidget({
+class WeightCountWidget extends StatelessWidget {
+  const WeightCountWidget({
     super.key,
     required this.viewModel,
   });
   final DetailViewModel viewModel;
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
       children: [
-        TextField(
-          controller: viewModel.weightController,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.digitsOnly, // <-- только цифры
-          ],
-          decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: 'Введите вес',
+        Expanded(
+          child: TextField(
+            controller: viewModel.weightController,
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.digitsOnly, // <-- только цифры
+            ],
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Введите вес',
+            ),
           ),
         ),
-        SizedBox(height: 5,),
-        Container(
-          alignment: Alignment.centerLeft,
-          child: TextButton.icon(
-            onPressed: () => viewModel.saveWeight(context),
-            icon: const Icon(Icons.save),
-            label: const Text('Сохранить'),
+        SizedBox(width: 5,),
+        Expanded(
+          child: TextField(
+            controller: viewModel.countController,
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.digitsOnly, // <-- только цифры
+            ],
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Введите повторения',
+            ),
           ),
-        ),
-      ],
-    );
-  }
-}
-
-class CountWidget extends StatelessWidget {
-  const CountWidget({
-    super.key,
-    required this.viewModel,
-  });
-  final DetailViewModel viewModel;
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextField(
-          controller: viewModel.countController,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.digitsOnly, // <-- только цифры
-          ],
-          decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: 'Введите повторения',
-          ),
-        ),
-        SizedBox(height: 5,),
-        Container(
-          alignment: Alignment.centerLeft,
-          child: TextButton.icon(
-            onPressed: () => viewModel.saveCount(context),
-            icon: const Icon(Icons.save),
-            label: const Text('Сохранить'),
-          ),
-        ),
+        )
       ],
     );
   }
@@ -188,14 +173,6 @@ class NameWidget extends StatelessWidget {
           ),
         ),
         SizedBox(height: 5,),
-        Container(
-          alignment: Alignment.centerLeft,
-          child: TextButton.icon(
-            onPressed: () => viewModel.saveName(context),
-            icon: const Icon(Icons.save),
-            label: const Text('Сохранить'),
-          ),
-        ),
       ],
     );
   }

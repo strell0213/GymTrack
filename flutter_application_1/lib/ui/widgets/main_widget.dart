@@ -239,9 +239,21 @@ class _TitleListTile extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: Text(
-            exercise.name,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+          child: Row(
+            children: [
+              Text(
+                exercise.name,
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+              ),
+              SizedBox(width: 10,),
+              Padding(
+                padding: const EdgeInsets.only(top: 3.0),
+                child: Text(
+                  exercise.typeExercice,
+                  style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: Colors.grey),
+                ),
+              )
+            ],
           ),
         ),
         Padding(
