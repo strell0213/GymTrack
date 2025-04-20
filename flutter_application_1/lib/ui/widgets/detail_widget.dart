@@ -50,7 +50,10 @@ class DetailWidget extends StatelessWidget {
       bottomNavigationBar: Padding(
         padding: EdgeInsets.all(35),
         child: ElevatedButton(
-          onPressed: (){}, 
+          onPressed: () {
+            viewModel.saveAll(context);
+            Navigator.pop(context);
+          }, 
           child: Text('Сохранить', 
             style: TextStyle(
               fontWeight: FontWeight.bold, 

@@ -292,6 +292,7 @@ class _WeightWidget extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.remove),
           onPressed: () {
+            if (exercise.isDone) return;
             exercise.weight-=5;
             context.read<ExerciseViewModel>().updateExercise(exercise);
           },
@@ -300,6 +301,7 @@ class _WeightWidget extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.add),
           onPressed: () {
+            if (exercise.isDone) return;
             exercise.weight+=5;
             context.read<ExerciseViewModel>().updateExercise(exercise);
           },
@@ -325,6 +327,7 @@ class _CountWidget extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.remove),
           onPressed: () { 
+            if(exercise.isDone) return;
             exercise.count-=5;
             context.read<ExerciseViewModel>().updateExercise(exercise);
           },
@@ -333,6 +336,7 @@ class _CountWidget extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.add),
           onPressed: () {
+            if(exercise.isDone) return;
             exercise.count+=5;
             context.read<ExerciseViewModel>().updateExercise(exercise);
           },

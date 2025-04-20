@@ -1,3 +1,5 @@
+import 'package:flutter_application_1/domain/entity/goal.dart';
+
 class Exercise
 {
   String _name;
@@ -7,6 +9,8 @@ class Exercise
   String _howDid;
   String _typeExercise;
   bool isDone = false;
+
+  List<Goal> goals = [];
 
   Exercise(this._name, this._count, this._weight, this._day,this._howDid,this._typeExercise);
 
@@ -18,18 +22,27 @@ class Exercise
         'day': _day,
         'howdid': _howDid,
         'typeExercice':_typeExercise,
+        'goals': goals.map((g) => g.toJson()).toList(),
       };
 
   // Для десериализации
   factory Exercise.fromJson(Map<String, dynamic> json) {
-    return Exercise(
+    final exercise = Exercise(
       json['name'],
       json['count'],
       json['weight'],
       json['day'],
       json['howdid'] ?? '',
-      json['typeExercice'] ?? ''
+      json['typeExercice'] ?? '',
     );
+
+    if (json['goals'] != null) {
+      exercise.goals = List<Goal>.from(
+        json['goals'].map((x) => Goal.fromJson(x)),
+      );
+    }
+
+    return exercise;
   }
 
   String get name => _name;

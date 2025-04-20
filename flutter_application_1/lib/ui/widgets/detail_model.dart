@@ -18,6 +18,17 @@ class DetailViewModel extends ChangeNotifier {
     nameController.text = exercise.name;
   }
 
+  void saveAll(BuildContext context){
+    exercise.name = nameController.text;
+    if (!exercise.isDone) {
+      exercise.count = int.tryParse(countController.text) ?? 0;
+      exercise.weight = int.tryParse(weightController.text) ?? 0;
+    }
+    exercise.howDid = howDidController.text;
+    exerciseVM.updateExercise(exercise);
+    _showSnackBar(context);
+  }
+
   void saveWeight(BuildContext context) {
     exercise.weight = int.tryParse(weightController.text) ?? 0;
     exerciseVM.updateExercise(exercise);
