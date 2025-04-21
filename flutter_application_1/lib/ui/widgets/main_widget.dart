@@ -242,7 +242,9 @@ class _TitleListTile extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                exercise.name,
+                exercise.name.length > 15 
+                ? '${exercise.name.substring(0, 15)}...' 
+                : exercise.name,
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
               ),
               SizedBox(width: 10,),
