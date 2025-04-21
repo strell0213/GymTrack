@@ -113,8 +113,12 @@ class _ExerciseListBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = context.watch<ExerciseViewModel>().state;
     final themeVM = Provider.of<ThemeViewModel>(context);
+    final exerciseVM = context.watch<ExerciseViewModel>();
 
-    final filteredExercises = state.exercises.where((e) => e.day == day).toList();
+    final filteredExercises = state.exercises
+    .where((e) => e.day == day)
+    .toList()
+    ..sort((a, b) => a.id.compareTo(b.id));
 
     if (state.isLoading) {
       return const Center(child: CircularProgressIndicator());
@@ -128,53 +132,51 @@ class _ExerciseListBody extends StatelessWidget {
       return const Center(child: Text('Нет упражнений'));
     }
 
-    return ListView.builder(
-      itemCount: filteredExercises.length,
-      padding: const EdgeInsets.all(5),
-      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-      itemBuilder: (BuildContext context, int index){
-        final exercise = filteredExercises[index];
-        return Container(
-          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          decoration: BoxDecoration(
-            color: themeVM.isDarkTheme ? Colors.black : Colors.white,// Цвет фона
-            border: Border.all(color: Colors.grey, width: 2), // Обводка
-            borderRadius: BorderRadius.circular(12), // Скруглённые углы
-            boxShadow: [
-              BoxShadow(
-                color: exercise.isDone ? Colors.green : Colors.grey.withOpacity(0.2),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: const Offset(0, 3), // Тень
-              ),
-            ],
-          ),
-          child: ListTile(
-            title: _TitleListTile(exercise: exercise),
-            subtitle: Row(
-              children: [
-                _LeftButtons(exercise: exercise),
-                _RightButtons(exercise: exercise),
+    return ReorderableListView(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      onReorder: (oldIndex, newIndex) {
+        exerciseVM.reorderExercise(day, oldIndex, newIndex); // тебе нужно реализовать эту функцию
+      },
+      children: [
+        for (final exercise in filteredExercises)
+          Container(
+            key: ValueKey(exercise.id), // уникальный ключ
+            margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            decoration: BoxDecoration(
+              color: themeVM.isDarkTheme ? Colors.black : Colors.white,
+              border: Border.all(color: Colors.grey, width: 2),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: exercise.isDone ? Colors.green : Colors.grey.withOpacity(0.2),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: const Offset(0, 3),
+                ),
               ],
             ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ChangeNotifierProvider(
-                    create: (_) => DetailViewModel(
-                      exercise, 
-                      context.read<ExerciseViewModel>(),
+            child: ListTile(
+              title: _TitleListTile(exercise: exercise),
+              subtitle: Row(
+                children: [
+                  _LeftButtons(exercise: exercise),
+                  _RightButtons(exercise: exercise),
+                ],
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChangeNotifierProvider(
+                      create: (_) => DetailViewModel(exercise, exerciseVM),
+                      child: DetailWidget(),
                     ),
-                    child: DetailWidget(), // <- сам виджет ничего не принимает
                   ),
-                ),
-              );
-            },
-            // trailing: _RightButtons(exercise: exercise),
-          ),
-        );
-      }
+                );
+              },
+            ),
+          )
+      ],
     );
   }
 }
@@ -242,7 +244,9 @@ class _TitleListTile extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                exercise.name,
+                exercise.name.length > 15 
+                ? '${exercise.name.substring(0, 15)}...' 
+                : exercise.name,
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
               ),
               SizedBox(width: 10,),
