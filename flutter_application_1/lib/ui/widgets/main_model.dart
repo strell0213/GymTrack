@@ -50,6 +50,10 @@ class ExerciseViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<int> newID() async {
+    return await _service.getCount() + 1;
+  }
+
   Future<void> addExercise(Exercise exercise) async {
     _setLoading(true);
     try {
@@ -111,6 +115,28 @@ class ExerciseViewModel extends ChangeNotifier {
     } catch(e) {
       _setError(e.toString());
     }
+  }
+
+  void reorderExercise(String day, int oldIndex, int newIndex) {
+    final list = state.exercises.where((e) => e.day == day).toList();
+    if (newIndex > oldIndex) newIndex -= 1;
+
+    final item = list.removeAt(oldIndex);
+    list.insert(newIndex, item);
+
+    // Обновляем numPP (порядковый номер)
+    for (int i = 0; i < list.length; i++) {
+      list[i].id = i;
+    }
+
+    // Обновляем основное состояние (если хранишь весь список)
+    final updatedExercises = state.exercises.map((e) {
+      final updated = list.firstWhere((x) => x.id == e.id, orElse: () => e);
+      return e.day == day ? updated : e;
+    }).toList();
+
+    _state = _state.copyWith(exercises: updatedExercises);
+    notifyListeners();
   }
 
   void _setLoading(bool value) {

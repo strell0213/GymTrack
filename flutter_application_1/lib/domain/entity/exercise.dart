@@ -2,6 +2,7 @@ import 'package:flutter_application_1/domain/entity/goal.dart';
 
 class Exercise
 {
+  int _id;
   String _name;
   int _weight;
   int _count;
@@ -12,10 +13,11 @@ class Exercise
 
   List<Goal> goals = [];
 
-  Exercise(this._name, this._count, this._weight, this._day,this._howDid,this._typeExercise);
+  Exercise(this._id,this._name, this._count, this._weight, this._day,this._howDid,this._typeExercise);
 
     // Для сериализации
   Map<String, dynamic> toJson() => {
+        'id': _id,
         'name': _name,
         'weight': _weight,
         'count': _count,
@@ -28,6 +30,7 @@ class Exercise
   // Для десериализации
   factory Exercise.fromJson(Map<String, dynamic> json) {
     final exercise = Exercise(
+      json['id'] ?? '',
       json['name'],
       json['count'],
       json['weight'],
@@ -45,6 +48,7 @@ class Exercise
     return exercise;
   }
 
+  int get id => _id;
   String get name => _name;
   int get weight => _weight;
   int get count => _count;
@@ -66,5 +70,9 @@ class Exercise
 
   set howDid(String value){
     _howDid = value;
+  }
+  
+  set id(int value){
+    _id = value;
   }
 }

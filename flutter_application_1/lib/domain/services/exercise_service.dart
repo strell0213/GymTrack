@@ -35,7 +35,7 @@ class ExerciseService {
     final exercises = await loadExercises();
     for(int i = 0; i < exercises.length; i++)
     {
-      if(exercises[i].name == updatedExercise.name)
+      if(exercises[i].id == updatedExercise.id)
       {
         exercises[i] = updatedExercise;
         await saveExercises(exercises);
@@ -54,5 +54,10 @@ class ExerciseService {
         await saveExercises(exercises);
       } 
     }
+  }
+
+  Future<int> getCount() async{
+    final exercises = await loadExercises();
+    return exercises.length;
   }
 }

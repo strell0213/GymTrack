@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/entity/exercise.dart';
+
 import 'package:flutter_application_1/ui/widgets/main_model.dart';
 
 class AddViewModel extends ChangeNotifier{
@@ -8,17 +9,19 @@ class AddViewModel extends ChangeNotifier{
   final TextEditingController searchController = TextEditingController();
   late String selectedDay;
   late String selectedType;
+  late int newID;
 
   AddViewModel(this.exerciseVM);
 
-  void addExercise(BuildContext context) {
+  void addExercise(BuildContext context) async{
     final text = searchController.text;
     final isValid = checkControllerText(text);
+    newID =  await exerciseVM.newID();
 
     if(!checkSelectDay(context)) return;
 
     if (isValid) {
-      exerciseVM.addExercise(Exercise(text, 0, 0, getDayForAdd(selectedDay),'',selectedType));
+      exerciseVM.addExercise(Exercise(newID, text, 0, 0, getDayForAdd(selectedDay),'',selectedType));
       Navigator.pop(context);
     } else {
       showMessage(context, 'Вы ничего не ввели!');
