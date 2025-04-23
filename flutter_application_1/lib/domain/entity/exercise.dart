@@ -24,6 +24,7 @@ class Exercise
         'day': _day,
         'howdid': _howDid,
         'typeExercice':_typeExercise,
+        'isDone': isDone ? 1 : 0,
         'goals': goals.map((g) => g.toJson()).toList(),
       };
 
@@ -38,6 +39,8 @@ class Exercise
       json['howdid'] ?? '',
       json['typeExercice'] ?? '',
     );
+
+    exercise.isDone = json['isDone'] == 1;
 
     if (json['goals'] != null) {
       exercise.goals = List<Goal>.from(
