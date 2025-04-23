@@ -118,7 +118,7 @@ class _ExerciseListBody extends StatelessWidget {
     final filteredExercises = state.exercises
     .where((e) => e.day == day)
     .toList()
-    ..sort((a, b) => a.id.compareTo(b.id));
+    ..sort((a, b) => a.numPP.compareTo(b.numPP));
 
     if (state.isLoading) {
       return const Center(child: CircularProgressIndicator());
@@ -135,7 +135,7 @@ class _ExerciseListBody extends StatelessWidget {
     return ReorderableListView(
       padding: const EdgeInsets.symmetric(vertical: 12),
       onReorder: (oldIndex, newIndex) {
-        exerciseVM.reorderExercise(day, oldIndex, newIndex); // тебе нужно реализовать эту функцию
+        exerciseVM.reorderExercise(day, oldIndex, newIndex);
       },
       children: [
         for (final exercise in filteredExercises)

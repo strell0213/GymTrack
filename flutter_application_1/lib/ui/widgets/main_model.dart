@@ -126,12 +126,12 @@ class ExerciseViewModel extends ChangeNotifier {
 
     // Обновляем numPP (порядковый номер)
     for (int i = 0; i < list.length; i++) {
-      list[i].id = i;
+      list[i].numPP = i;
     }
 
     // Обновляем основное состояние (если хранишь весь список)
     final updatedExercises = state.exercises.map((e) {
-      final updated = list.firstWhere((x) => x.id == e.id, orElse: () => e);
+      final updated = list.firstWhere((x) => x.numPP == e.numPP, orElse: () => e);
       return e.day == day ? updated : e;
     }).toList();
 

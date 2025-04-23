@@ -21,7 +21,7 @@ class AddViewModel extends ChangeNotifier{
     if(!checkSelectDay(context)) return;
 
     if (isValid) {
-      exerciseVM.addExercise(Exercise(newID, text, 0, 0, getDayForAdd(selectedDay),'',selectedType));
+      exerciseVM.addExercise(Exercise(newID, text, 0, 0, getDayForAdd(selectedDay),'',selectedType,0));
       Navigator.pop(context);
     } else {
       showMessage(context, 'Вы ничего не ввели!');

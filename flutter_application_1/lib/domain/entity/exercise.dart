@@ -10,10 +10,11 @@ class Exercise
   String _howDid;
   String _typeExercise;
   bool isDone = false;
+  int _numPP;
 
   List<Goal> goals = [];
 
-  Exercise(this._id,this._name, this._count, this._weight, this._day,this._howDid,this._typeExercise);
+  Exercise(this._id,this._name, this._count, this._weight, this._day,this._howDid,this._typeExercise, this._numPP);
 
     // Для сериализации
   Map<String, dynamic> toJson() => {
@@ -24,6 +25,7 @@ class Exercise
         'day': _day,
         'howdid': _howDid,
         'typeExercice':_typeExercise,
+        'numPP': _numPP,
         'goals': goals.map((g) => g.toJson()).toList(),
       };
 
@@ -37,6 +39,7 @@ class Exercise
       json['day'],
       json['howdid'] ?? '',
       json['typeExercice'] ?? '',
+      json['numPP'] ?? 0,
     );
 
     if (json['goals'] != null) {
@@ -55,6 +58,7 @@ class Exercise
   String get day => _day;
   String get howDid => _howDid;
   String get typeExercice => _typeExercise;
+  int get numPP => _numPP;
 
   set name(String value){
     _name = value;
@@ -74,5 +78,9 @@ class Exercise
   
   set id(int value){
     _id = value;
+  }
+
+  set numPP(int value){
+    _numPP=value;
   }
 }
