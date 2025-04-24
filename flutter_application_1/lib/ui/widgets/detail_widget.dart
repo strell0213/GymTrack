@@ -131,6 +131,9 @@ class WeightCountWidget extends StatelessWidget {
         Expanded(
           child: TextField(
             controller: viewModel.weightController,
+            onTap: () {
+              viewModel.weightController.text == "0" ? viewModel.weightController.text="" : viewModel.weightController.text=viewModel.weightController.text;
+            },
             keyboardType: TextInputType.number,
             inputFormatters: <TextInputFormatter>[
               FilteringTextInputFormatter.digitsOnly, // <-- только цифры
@@ -145,6 +148,9 @@ class WeightCountWidget extends StatelessWidget {
         Expanded(
           child: TextField(
             controller: viewModel.countController,
+            onTap: () {
+              viewModel.countController.text == "0" ? viewModel.countController.text="" : viewModel.countController.text=viewModel.countController.text;
+            },
             keyboardType: TextInputType.number,
             inputFormatters: <TextInputFormatter>[
               FilteringTextInputFormatter.digitsOnly, // <-- только цифры

@@ -46,10 +46,15 @@ class HistoryService {
     final listHistory = await loadHistory();
     for(int i = 0; i < listHistory.length; i++)
     {
-      if(listHistory[i].name == deleteExercise.name && hasTodayEntry(listHistory, deleteExercise.id))
+      if(listHistory[i].idExercise == deleteExercise.id && hasTodayEntry(listHistory, deleteExercise.id))
       {
-        listHistory.removeAt(i);
-        await saveHistory(listHistory);
+        DateTime nowDate = DateTime.now();
+        DateTime historyDate = listHistory[i].createAt;
+        if(historyDate.year == nowDate.year && historyDate.month == nowDate.month && historyDate.day == nowDate.day)
+        {
+          listHistory.removeAt(i);
+          await saveHistory(listHistory);
+        }
       } 
     }
   }

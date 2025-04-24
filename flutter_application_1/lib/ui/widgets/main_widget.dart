@@ -105,17 +105,22 @@ class Mainwidget extends StatelessWidget {
   }
 }
 
-class _ExerciseListBody extends StatelessWidget {
+class _ExerciseListBody extends StatefulWidget {
   final String day;
   const _ExerciseListBody({required this.day});
 
+  @override
+  State<_ExerciseListBody> createState() => _ExerciseListBodyState();
+}
+
+class _ExerciseListBodyState extends State<_ExerciseListBody> {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<ExerciseViewModel>().state;
     final themeVM = Provider.of<ThemeViewModel>(context);
     final exerciseVM = context.watch<ExerciseViewModel>();
 
-    final filteredExercises = state.exercises.where((e) => e.day == day).toList();
+    final filteredExercises = state.exercises.where((e) => e.day == widget.day).toList();
 
     context.read<ExerciseViewModel>().checkReadyExersice(filteredExercises);
     if (state.isLoading) {
@@ -133,7 +138,7 @@ class _ExerciseListBody extends StatelessWidget {
     return ReorderableListView(
       padding: const EdgeInsets.symmetric(vertical: 12),
       onReorder: (oldIndex, newIndex) {
-        exerciseVM.reorderExercise(day, oldIndex, newIndex);
+        exerciseVM.reorderExercise(widget.day, oldIndex, newIndex);
       },
       children: [
         for (final exercise in filteredExercises)
