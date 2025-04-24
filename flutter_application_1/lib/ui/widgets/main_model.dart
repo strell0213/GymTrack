@@ -51,7 +51,11 @@ class ExerciseViewModel extends ChangeNotifier {
   }
 
   Future<int> newID() async {
-    return await _service.getCount() + 1;
+    final exercises = await _service.loadExercises(); // получаем весь список
+    if (exercises.isEmpty) return 0;
+
+    final maxId = exercises.map((e) => e.id).reduce((a, b) => a > b ? a : b);
+    return maxId + 1;
   }
 
   Future<void> addExercise(Exercise exercise) async {
@@ -86,6 +90,7 @@ class ExerciseViewModel extends ChangeNotifier {
   Future<void> addHistory(Exercise exercise) async{
     try{
       await _historyService.addHistory(exercise);
+      await _service.updateExercise(exercise);
       notifyListeners();
     } catch (e) {
       _setError(e.toString());
@@ -95,6 +100,7 @@ class ExerciseViewModel extends ChangeNotifier {
   Future<void> deleteHistory(Exercise exercise) async{
     try{
       _historyService.deleteHistory(exercise);
+      await _service.updateExercise(exercise);
       notifyListeners();
     } catch(e){
       _setError(e.toString());
@@ -107,8 +113,9 @@ class ExerciseViewModel extends ChangeNotifier {
       for(int i = 0; i < exerciseList.length; i++)
       {
         final ex = exerciseList[i];
-        final isDone = _historyService.hasTodayEntry(historyList, ex.name);
+        final isDone = _historyService.hasTodayEntry(historyList, ex.id);
         ex.isDone = isDone;
+        _service.updateExercise(ex);
       }
 
       notifyListeners();

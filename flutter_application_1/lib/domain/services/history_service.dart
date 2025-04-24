@@ -26,10 +26,19 @@ class HistoryService {
 
   Future<void> addHistory(Exercise exercise) async 
   {
-    final item = History(exercise.name, exercise.weight, exercise.count, DateTime.now().toString());
+    final id = await newID();
+    final item = History(id,exercise.name, exercise.weight, exercise.count, DateTime.now().toString(), exercise.id);
     final listHistory = await loadHistory();
     listHistory.add(item);
     await saveHistory(listHistory);
+  }
+
+  Future<int> newID() async{
+    final listHistory = await loadHistory(); // получаем весь список
+    if (listHistory.isEmpty) return 0;
+
+    final maxId = listHistory.map((e) => e.id).reduce((a, b) => a > b ? a : b);
+    return maxId + 1;
   }
 
   Future<void> deleteHistory(Exercise deleteExercise) async 
@@ -37,7 +46,7 @@ class HistoryService {
     final listHistory = await loadHistory();
     for(int i = 0; i < listHistory.length; i++)
     {
-      if(listHistory[i].name == deleteExercise.name && hasTodayEntry(listHistory, deleteExercise.name))
+      if(listHistory[i].name == deleteExercise.name && hasTodayEntry(listHistory, deleteExercise.id))
       {
         listHistory.removeAt(i);
         await saveHistory(listHistory);
@@ -45,11 +54,11 @@ class HistoryService {
     }
   }
 
-  bool hasTodayEntry(List<History> historyList, String exerciseName) {
+  bool hasTodayEntry(List<History> historyList, int id) {
     final today = DateTime.now();
 
     return historyList.any((history) {
-      if (history.name != exerciseName) return false;
+      if (history.idExercise != id) return false;
 
       // Преобразуем строку в DateTime
       final date = history.createAt;

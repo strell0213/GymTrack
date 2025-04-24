@@ -120,6 +120,7 @@ class _ExerciseListBody extends StatelessWidget {
     .toList()
     ..sort((a, b) => a.numPP.compareTo(b.numPP));
 
+    context.read<ExerciseViewModel>().checkReadyExersice(filteredExercises);
     if (state.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -244,14 +245,14 @@ class _TitleListTile extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                exercise.name.length > 15 
-                ? '${exercise.name.substring(0, 15)}...' 
+                exercise.name.length > 13 
+                ? '${exercise.name.substring(0, 13)}..' 
                 : exercise.name,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
               SizedBox(width: 10,),
               Padding(
-                padding: const EdgeInsets.only(top: 3.0),
+                padding: const EdgeInsets.only(top: 0),
                 child: Text(
                   exercise.typeExercice,
                   style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: Colors.grey),
