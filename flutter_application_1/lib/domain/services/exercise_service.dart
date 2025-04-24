@@ -56,6 +56,27 @@ class ExerciseService {
     }
   }
 
+  Future<Exercise?> getByNumPP(int num) async
+  {
+    final exercises = await loadExercises();
+    for(int i =0; i<exercises.length; i++)
+    {
+      if(exercises[i].numPP == num) return exercises[i];
+    }  
+    return null;
+  }
+
+  Future<int> MaxNumPP() async
+  {
+    int curNum=0;
+    final exercises = await loadExercises();
+    for(int i = 0; i< exercises.length; i++)
+    {
+      if(exercises[i].numPP > curNum) curNum = exercises[i].numPP;
+    }  
+    return curNum;
+  }
+
   Future<int> getCount() async{
     final exercises = await loadExercises();
     return exercises.length;
