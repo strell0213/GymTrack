@@ -115,10 +115,7 @@ class _ExerciseListBody extends StatelessWidget {
     final themeVM = Provider.of<ThemeViewModel>(context);
     final exerciseVM = context.watch<ExerciseViewModel>();
 
-    final filteredExercises = state.exercises
-    .where((e) => e.day == day)
-    .toList()
-    ..sort((a, b) => a.numPP.compareTo(b.numPP));
+    final filteredExercises = state.exercises.where((e) => e.day == day).toList();
 
     context.read<ExerciseViewModel>().checkReadyExersice(filteredExercises);
     if (state.isLoading) {

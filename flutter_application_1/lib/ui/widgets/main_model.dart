@@ -125,26 +125,22 @@ class ExerciseViewModel extends ChangeNotifier {
   }
 
   void reorderExercise(String day, int oldIndex, int newIndex) {
-    final list = state.exercises.where((e) => e.day == day).toList();
+    final dayExercises = state.exercises.where((e) => e.day == day).toList();
     if (newIndex > oldIndex) newIndex -= 1;
 
-    final item = list.removeAt(oldIndex);
-    list.insert(newIndex, item);
+    final item = dayExercises.removeAt(oldIndex);
+    dayExercises.insert(newIndex, item);
 
-    // Обновляем numPP (порядковый номер)
-    for (int i = 0; i < list.length; i++) {
-      list[i].numPP = i;
-    }
+    // Обновляем оригинальный список с новыми позициями
+    state.exercises
+      ..removeWhere((e) => e.day == day)
+      ..addAll(dayExercises);
 
-    // Обновляем основное состояние (если хранишь весь список)
-    final updatedExercises = state.exercises.map((e) {
-      final updated = list.firstWhere((x) => x.numPP == e.numPP, orElse: () => e);
-      return e.day == day ? updated : e;
-    }).toList();
+    _service.saveExercises(state.exercises);
 
-    _state = _state.copyWith(exercises: updatedExercises);
     notifyListeners();
   }
+
 
   void _setLoading(bool value) {
     _state = _state.copyWith(isLoading: value, errorMessage: null);
