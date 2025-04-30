@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/entity/exercise.dart';
 import 'package:flutter_application_1/domain/entity/goal.dart';
+import 'package:flutter_application_1/domain/services/exercise_service.dart';
+import 'package:flutter_application_1/ui/widgets/goal_add_model.dart';
+import 'package:flutter_application_1/ui/widgets/goal_add_widget.dart';
 import 'package:flutter_application_1/ui/widgets/goal_model.dart';
 import 'package:flutter_application_1/ui/widgets/themeviewmodel.dart';
 import 'package:provider/provider.dart';
@@ -10,13 +13,24 @@ class MainGoalWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final state = context.watch<GoalViewModal>().state;
     return Scaffold(
       appBar: AppBar(
         title: Row(
           children: [
             Expanded(child: Center(child: Text('Цели'))),
             IconButton(
-              onPressed: (){}, 
+              onPressed: () async{
+                await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ChangeNotifierProvider(
+                        create: (_) => GoalAddViewModal(state.exercise, ExerciseService()),
+                        child: GoalAddWidget(),
+                      ),
+                    ),
+                  );
+              }, 
               icon: Icon(Icons.add)
             )
           ],
@@ -45,7 +59,13 @@ class _GoalListWidget extends StatelessWidget {
     if (state.errorMessage != null) {
       return Center(child: Text('Ошибка: ${state.errorMessage}'));
     }
+
+    if(goals.isEmpty){
+      return Center(child: Text('Список целей пуст'));
+    }
+
     return ListView.builder(
+      itemCount: goals.length,
       itemBuilder: (BuildContext context, int index){
         final goal = goals[index];
         return Container(
@@ -56,24 +76,39 @@ class _GoalListWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
+                  color: exercise.weight == goal.targetWeight ? Colors.green : Colors.grey.withOpacity(0.2),
                   spreadRadius: 2,
                   blurRadius: 5,
                   offset: const Offset(0, 3),
                 ),
               ],
             ),
-          child: ListTile(
-            title: Text(goal.name),
+          child: 
+          ListTile(
+            title: _TitleWidget(goal: goal),
             subtitle: Row(
               children: [
-                _GoalProgressBar(exercise: exercise, goal: goal),
+                SizedBox(height: 50,),
+                Expanded(child: _GoalProgressBar(exercise: exercise, goal: goal))
               ],
             ),
           ),
         );
       }
     );
+  }
+}
+
+class _TitleWidget extends StatelessWidget {
+  const _TitleWidget({
+    required this.goal,
+  });
+
+  final Goal goal;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(goal.name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),);
   }
 }
 

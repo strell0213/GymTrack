@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/domain/services/history_service.dart';
 import 'package:flutter_application_1/ui/widgets/detail_model.dart';
+import 'package:flutter_application_1/ui/widgets/goal_model.dart';
+import 'package:flutter_application_1/ui/widgets/goal_widget.dart';
 import 'package:flutter_application_1/ui/widgets/statistic_model.dart';
 import 'package:flutter_application_1/ui/widgets/statistic_widget.dart';
 import 'package:flutter_application_1/ui/widgets/themeviewmodel.dart';
@@ -20,7 +22,17 @@ class DetailWidget extends StatelessWidget {
             SizedBox(width: 48, height: 48,),
             Expanded(child: Center(child: Text(viewModel.exercise.name))),
             IconButton(
-              onPressed: (){}, 
+              onPressed: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ChangeNotifierProvider(
+                        create: (_) => GoalViewModal(viewModel.exercise),
+                        child: MainGoalWidget(),
+                      ),
+                    ),
+                  );
+              }, 
               icon: Icon(Icons.star_outline_sharp)
             ),
             IconButton(

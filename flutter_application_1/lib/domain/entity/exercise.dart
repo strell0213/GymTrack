@@ -86,4 +86,12 @@ class Exercise
   set numPP(int value){
     _numPP=value;
   }
+
+  int getNewGoalID()
+  {
+    if(goals.isEmpty) return 0;
+
+    final maxID = goals.map((e) => e.idGoal).reduce((a, b) => a > b ? a : b);
+    return maxID + 1;
+  }
 }

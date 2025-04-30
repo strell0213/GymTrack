@@ -1,10 +1,5 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/entity/exercise.dart';
-import 'package:flutter_application_1/domain/entity/goal.dart';
-import 'package:flutter_application_1/domain/services/exercise_service.dart';
-import 'package:flutter_application_1/domain/services/goal_service.dart';
 
 class GoalState{
   final Exercise exercise;
@@ -32,13 +27,12 @@ class GoalState{
 
 class GoalViewModal extends ChangeNotifier{
   final Exercise exercise;
-  final GoalService _goalService;
-  final ExerciseService _exerciseService;
-  final int _idExercise;
 
-  GoalViewModal(this.exercise, this._idExercise, this._goalService, this._exerciseService);
+  late GoalState _state;
 
-  GoalState _state = GoalState(exercise: Exercise(0, "", 0, 0, "", "", "", 0));
+  GoalViewModal(this.exercise) {
+    _state = GoalState(exercise: exercise);
+  }
   GoalState get state => _state;
 
   Future<void> getGoalList() async {
@@ -56,10 +50,10 @@ class GoalViewModal extends ChangeNotifier{
     notifyListeners();
   }
 
-  void _setError(String message) {
-    _state = _state.copyWith(errorMessage: message, isLoading: false);
-    notifyListeners();
-  }
+  // void _setError(String message) {
+  //   _state = _state.copyWith(errorMessage: message, isLoading: false);
+  //   notifyListeners();
+  // }
 
   @override
   void dispose() {
