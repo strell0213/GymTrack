@@ -3,8 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/domain/entity/exercise.dart';
 import 'package:flutter_application_1/domain/entity/goal.dart';
 import 'package:flutter_application_1/domain/services/exercise_service.dart';
-import 'package:flutter_application_1/domain/services/goal_service.dart';
-import 'package:flutter_application_1/ui/widgets/main_model.dart';
 
 class GoalAddViewModal extends ChangeNotifier {
   final TextEditingController nameController=TextEditingController();
@@ -20,7 +18,7 @@ class GoalAddViewModal extends ChangeNotifier {
   Future<void> addGoal(BuildContext context) async{
     final nameGoal = nameController.text;
     final weightGoal = int.tryParse(weightController.text);
-    Goal goal = Goal(exercise.getNewGoalID(), nameGoal, weightGoal!, 0);
+    Goal goal = Goal(exercise.getNewGoalID(), nameGoal, weightGoal!, 0, false);
 
     exercise.goals.add(goal);
     try{

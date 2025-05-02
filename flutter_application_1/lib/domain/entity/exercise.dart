@@ -94,4 +94,28 @@ class Exercise
     final maxID = goals.map((e) => e.idGoal).reduce((a, b) => a > b ? a : b);
     return maxID + 1;
   }
+
+  Goal getActualGoal()
+  {
+    for(var goal in goals)
+    {
+      if(goal.targetWeight > weight) {return goal;}
+      else if(goal.targetCount > count) {return goal;}
+    }
+    return Goal(0, '', 0, 0, true);
+  }
+
+  int getCountNotFinishGoals(){
+    return goals.length;
+  }
+
+  void checkGoals(){
+    for(var goal in goals)
+    {
+      if(goal.targetWeight <= weight) {goal.isFinish=true;}
+      else {goal.isFinish=false;}
+      if(goal.targetCount <= count) {goal.isFinish=true;}
+      else {goal.isFinish=false;}
+    }
+  }
 }

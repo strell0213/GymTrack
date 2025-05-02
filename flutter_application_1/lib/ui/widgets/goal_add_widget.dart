@@ -53,7 +53,7 @@ class _WeightWidgetState extends State<_WeightWidget> {
     return TextField(
       controller: widget.viewModal.weightController,
       onChanged: (value) {
-        String str = widget.viewModal.weightController.text;
+        String str= widget.viewModal.weightController.text;
         if(str == "")
         {
           setState(() {

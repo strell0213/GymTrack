@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/entity/exercise.dart';
+import 'package:flutter_application_1/domain/entity/goal.dart';
 import 'package:flutter_application_1/ui/widgets/add_model.dart';
 import 'package:flutter_application_1/ui/widgets/add_widget.dart';
 import 'package:flutter_application_1/ui/widgets/detail_model.dart';
@@ -122,6 +123,8 @@ class _ExerciseListBodyState extends State<_ExerciseListBody> {
 
     final filteredExercises = state.exercises.where((e) => e.day == widget.day).toList();
 
+
+
     context.read<ExerciseViewModel>().checkReadyExersice(filteredExercises);
     if (state.isLoading) {
       return const Center(child: CircularProgressIndicator());
@@ -184,6 +187,23 @@ class _ExerciseListBodyState extends State<_ExerciseListBody> {
   }
 }
 
+class _DownButtons extends StatelessWidget{
+  const _DownButtons({
+    required this.goal,
+  });
+
+  final Goal? goal;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(goal!.name, style: TextStyle(color: Colors.yellow),),
+      ],
+    );
+  }
+}
+
 class _LeftButtons extends StatelessWidget {
   const _LeftButtons({
     required this.exercise,
@@ -200,6 +220,10 @@ class _LeftButtons extends StatelessWidget {
           _CountWidget(exercise: exercise),
           _WeightWidget(exercise: exercise),
           SizedBox(height: 5,),
+          Visibility(
+            visible: exercise.getCountNotFinishGoals() != 0 ? true : false,
+            child: _DownButtons(goal: exercise.getActualGoal())
+          ),
         ],
       ),
     );
