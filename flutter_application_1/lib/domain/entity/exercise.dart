@@ -99,14 +99,17 @@ class Exercise
   {
     for(var goal in goals)
     {
-      if(goal.targetWeight > weight) {return goal;}
-      else if(goal.targetCount > count) {return goal;}
+      if(goal.isFinish == false)
+      {
+        if(goal.targetWeight > weight) {return goal;}
+        else if(goal.targetCount > count) {return goal;}
+      }
     }
-    return Goal(0, '', 0, 0, true);
+    return Goal(0, '', 0, 0);
   }
 
   int getCountNotFinishGoals(){
-    return goals.length;
+    return goals.where((e) => e.isFinish == false).length;
   }
 
   void checkGoals(){
@@ -117,5 +120,21 @@ class Exercise
       if(goal.targetCount <= count) {goal.isFinish=true;}
       else {goal.isFinish=false;}
     }
+  }
+
+  int getRemainder(Goal goal)
+  {
+    return goal.targetWeight - weight;
+  }
+
+  String getActualText(Goal goal)
+  {
+    String msg = "Цель: ";
+    msg += goal.name; msg += ". ";
+    msg += "Осталось ";
+    msg += getRemainder(goal).toString();
+    msg += " кг до цели!";
+
+    return msg;
   }
 }

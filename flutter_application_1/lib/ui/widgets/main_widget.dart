@@ -123,8 +123,6 @@ class _ExerciseListBodyState extends State<_ExerciseListBody> {
 
     final filteredExercises = state.exercises.where((e) => e.day == widget.day).toList();
 
-
-
     context.read<ExerciseViewModel>().checkReadyExersice(filteredExercises);
     if (state.isLoading) {
       return const Center(child: CircularProgressIndicator());
@@ -190,15 +188,17 @@ class _ExerciseListBodyState extends State<_ExerciseListBody> {
 class _DownButtons extends StatelessWidget{
   const _DownButtons({
     required this.goal,
+    required this.exercise
   });
 
   final Goal? goal;
+  final Exercise exercise;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(goal!.name, style: TextStyle(color: Colors.yellow),),
+        Text(exercise.getActualText(goal!), style: TextStyle(color: Colors.yellow),),
       ],
     );
   }
@@ -222,7 +222,7 @@ class _LeftButtons extends StatelessWidget {
           SizedBox(height: 5,),
           Visibility(
             visible: exercise.getCountNotFinishGoals() != 0 ? true : false,
-            child: _DownButtons(goal: exercise.getActualGoal())
+            child: _DownButtons(goal: exercise.getActualGoal(), exercise: exercise,)
           ),
         ],
       ),

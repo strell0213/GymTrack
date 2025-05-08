@@ -3,9 +3,9 @@ class Goal {
   String name;
   int targetWeight;
   int targetCount;
-  bool isFinish;
+  bool isFinish=false;
 
-  Goal(this.idGoal,this.name,this.targetWeight, this.targetCount, this.isFinish);
+  Goal(this.idGoal,this.name,this.targetWeight, this.targetCount);
 
   Map<String, dynamic> toJson() => {
         'idGoal': idGoal,
@@ -16,12 +16,15 @@ class Goal {
       };
 
   factory Goal.fromJson(Map<String, dynamic> json) {
-    return Goal(
+    final goal = Goal(
       json['idGoal'],
       json['name'],
       json['targetWeight'],
-      json['targetCount'],
-      json['isFinish'] ?? 0,
+      json['targetCount']
     );
+
+    goal.isFinish = json['isFinish'] == 1;
+
+    return goal;
   }
 }

@@ -22,9 +22,13 @@ class GoalAddWidget extends StatelessWidget {
                   border: OutlineInputBorder(),
               ),
             ),
+            SizedBox(height: 10,),
             _WeightWidget(viewModal: viewModal),
             TextButton.icon(
-              onPressed: () => viewModal.addGoal(context),
+              onPressed: () {
+                viewModal.addGoal(context);
+                Navigator.pop(context);
+              },
               icon: const Icon(Icons.add),
               label: const Text('Добавить'),
             ),

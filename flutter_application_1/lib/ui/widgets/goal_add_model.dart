@@ -18,7 +18,7 @@ class GoalAddViewModal extends ChangeNotifier {
   Future<void> addGoal(BuildContext context) async{
     final nameGoal = nameController.text;
     final weightGoal = int.tryParse(weightController.text);
-    Goal goal = Goal(exercise.getNewGoalID(), nameGoal, weightGoal!, 0, false);
+    Goal goal = Goal(exercise.getNewGoalID(), nameGoal, weightGoal!, 0);
 
     exercise.goals.add(goal);
     try{

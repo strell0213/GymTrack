@@ -50,6 +50,8 @@ class GoalViewModal extends ChangeNotifier{
     notifyListeners();
   }
 
+  
+
   // void _setError(String message) {
   //   _state = _state.copyWith(errorMessage: message, isLoading: false);
   //   notifyListeners();

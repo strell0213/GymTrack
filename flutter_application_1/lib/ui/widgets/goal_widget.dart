@@ -22,14 +22,14 @@ class MainGoalWidget extends StatelessWidget {
             IconButton(
               onPressed: () async{
                 await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => ChangeNotifierProvider(
-                        create: (_) => GoalAddViewModal(state.exercise, ExerciseService()),
-                        child: GoalAddWidget(),
-                      ),
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ChangeNotifierProvider(
+                      create: (_) => GoalAddViewModal(state.exercise, ExerciseService()),
+                      child: GoalAddWidget(),
                     ),
-                  );
+                  ),
+                ).then((_) => Navigator.pop(context));
               }, 
               icon: Icon(Icons.add)
             )

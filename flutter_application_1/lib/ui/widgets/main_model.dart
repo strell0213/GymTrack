@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/entity/exercise.dart';
-import 'package:flutter_application_1/domain/entity/goal.dart';
 import 'package:flutter_application_1/domain/services/exercise_service.dart';
 import 'package:flutter_application_1/domain/services/history_service.dart';
 
