@@ -15,18 +15,26 @@ class GoalAddViewModal extends ChangeNotifier {
     weightController.text=exercise.weight.toString();
   }
 
-  Future<void> addGoal(BuildContext context) async{
+  Future<bool> addGoal(BuildContext context) async {
     final nameGoal = nameController.text;
     final weightGoal = int.tryParse(weightController.text);
-    Goal goal = Goal(exercise.getNewGoalID(), nameGoal, weightGoal!, 0);
+    if(exercise.weight > weightGoal!) 
+    {
+      _showSnackBarError(context, "Указанная цель меньше существующей!");
+      return false;
+    }
+
+    Goal goal = Goal(exercise.getNewGoalID(), nameGoal, weightGoal, 0);
 
     exercise.goals.add(goal);
     try{
       await _exerciseService.updateExercise(exercise);
       _showSnackBar(context);
+      return true;
     }
     catch(e){
       _showSnackBarError(context, e.toString());
+      return false;
     }
   }
 

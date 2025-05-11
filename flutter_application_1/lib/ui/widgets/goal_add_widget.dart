@@ -22,12 +22,14 @@ class GoalAddWidget extends StatelessWidget {
                   border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 10,),
+            SizedBox(height: 25,),
             _WeightWidget(viewModal: viewModal),
             TextButton.icon(
               onPressed: () {
-                viewModal.addGoal(context);
-                Navigator.pop(context);
+                if(viewModal.addGoal(context) == true)
+                {
+                  Navigator.pop(context);
+                }
               },
               icon: const Icon(Icons.add),
               label: const Text('Добавить'),
@@ -58,19 +60,7 @@ class _WeightWidgetState extends State<_WeightWidget> {
       controller: widget.viewModal.weightController,
       onChanged: (value) {
         String str= widget.viewModal.weightController.text;
-        if(str == "")
-        {
-          setState(() {
-            widget.viewModal.weightController.text=widget.viewModal.exercise.weight.toString();
-          });
-        }
-        // else if(int.tryParse(str)! < widget.viewModal.exercise.weight)
-        // {
-        //   setState(() {
-        //     widget.viewModal.weightController.text=widget.viewModal.exercise.weight.toString();
-        //   });
-        // }
-        else if(str.length > 1)
+        if(str.length > 1)
         {
           if(str[0] == "0")
           {

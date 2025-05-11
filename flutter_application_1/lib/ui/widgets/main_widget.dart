@@ -196,9 +196,10 @@ class _DownButtons extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+    final themeVM = Provider.of<ThemeViewModel>(context);
     return Column(
       children: [
-        Text(exercise.getActualText(goal!), style: TextStyle(color: Colors.yellow),),
+        Text(exercise.getActualText(goal!), style: TextStyle(color: themeVM.isDarkTheme ? Colors.yellow : Colors.deepOrange),),
       ],
     );
   }

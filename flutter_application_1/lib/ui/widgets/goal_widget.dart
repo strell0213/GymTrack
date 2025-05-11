@@ -6,6 +6,7 @@ import 'package:flutter_application_1/ui/widgets/goal_add_model.dart';
 import 'package:flutter_application_1/ui/widgets/goal_add_widget.dart';
 import 'package:flutter_application_1/ui/widgets/goal_model.dart';
 import 'package:flutter_application_1/ui/widgets/themeviewmodel.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 
 class MainGoalWidget extends StatelessWidget {
@@ -46,7 +47,8 @@ class _GoalListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<GoalViewModal>().state;
+    final GVM = context.watch<GoalViewModal>();
+    final state = GVM.state;
     final themeVM = Provider.of<ThemeViewModel>(context);
 
     final exercise = state.exercise;
@@ -84,13 +86,30 @@ class _GoalListWidget extends StatelessWidget {
               ],
             ),
           child: 
-          ListTile(
-            title: _TitleWidget(goal: goal),
-            subtitle: Row(
+          Slidable(
+            key: ValueKey(goal.idGoal),
+            endActionPane: ActionPane(
+              motion: const DrawerMotion(),
               children: [
-                SizedBox(height: 50,),
-                Expanded(child: _GoalProgressBar(exercise: exercise, goal: goal))
+                SlidableAction(
+                  onPressed: (context) {
+                    GVM.deleteGoal(goal);
+                  },
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                  icon: Icons.delete,
+                  label: 'Удалить',
+                ),
               ],
+            ),
+            child: ListTile(
+              title: _TitleWidget(goal: goal),
+              subtitle: Row(
+                children: [
+                  SizedBox(height: 50,),
+                  Expanded(child: _GoalProgressBar(exercise: exercise, goal: goal))
+                ],
+              ),
             ),
           ),
         );
@@ -123,6 +142,7 @@ class _GoalProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeVM = Provider.of<ThemeViewModel>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -131,7 +151,7 @@ class _GoalProgressBar extends StatelessWidget {
         LinearProgressIndicator(
           value: (exercise.weight / goal.targetWeight).clamp(0.0, 1.0), // Ограничиваем от 0 до 1
           backgroundColor: Colors.grey[300],
-          color: Colors.yellow,
+          color: themeVM.isDarkTheme ? Colors.yellow : Colors.deepOrange,
           minHeight: 8,
         ),
       ],

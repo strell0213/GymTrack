@@ -117,8 +117,8 @@ class Exercise
     {
       if(goal.targetWeight <= weight) {goal.isFinish=true;}
       else {goal.isFinish=false;}
-      if(goal.targetCount <= count) {goal.isFinish=true;}
-      else {goal.isFinish=false;}
+      // if(goal.targetCount <= count) {goal.isFinish=true;}
+      // else {goal.isFinish=false;}
     }
   }
 
