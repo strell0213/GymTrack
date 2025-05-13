@@ -117,8 +117,6 @@ class Notify
 
   Future<void> GenerateNotifyForWeek(ExerciseService services) async
   {
-
-
     for(int i = 1; i <= 7; i++)
     {
       final strs = await services.getTypesStr(i);
@@ -130,7 +128,7 @@ class Notify
       for (int i = 0; i < strs.length; i++)
       {
         body += strs[i];
-        if(i + 1 == strs.length) body += "и";
+        if(i + 1 != strs.length) body += "и";
       }
 
       Not not = Not(await notService.newID(), getNextWeekday(i).toString(), 1);
