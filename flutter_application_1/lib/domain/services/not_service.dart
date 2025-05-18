@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_application_1/domain/entity/notify.dart';
@@ -22,6 +23,30 @@ class NotService
     final jsonString =
         jsonEncode(exercises.map((e) => e.toJson()).toList());
     await prefs.setString(_key, jsonString);
+  }
+
+  Future<void> deleteAllNot() async
+  {
+    final list = await loadNot();
+    for(int i = 0; i< list.length; i++)
+    {
+      list.removeAt(i);
+    }
+    saveNot(list);
+  }
+
+  Future<void> deleteOldNot() async {
+    final list = await loadNot();
+
+    final now = DateTime.now();
+
+    // Оставляем только те, у которых дата >= сегодня
+    final updatedList = list.where((not) {
+      final notDate = DateTime.tryParse(not.date);
+      return notDate != null && notDate.isAfter(now);
+    }).toList();
+
+    await saveNot(updatedList);
   }
 
   Future<void> addNot(Not not) async

@@ -111,12 +111,16 @@ class Notify
       body,
       date,
       notificationDetails(),
-      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+        UILocalNotificationDateInterpretation.absoluteTime,
+      androidAllowWhileIdle: true,
+      payload: 'payload'
     );
   }
 
   Future<void> GenerateNotifyForWeek(ExerciseService services) async
   {
+    notService.deleteOldNot();
     for(int i = 1; i <= 7; i++)
     {
       final strs = await services.getTypesStr(i);
@@ -143,6 +147,24 @@ class Notify
       );
     }
   }
+
+  Future<void> testNotification() async {
+    final now = tz.TZDateTime.now(tz.local);
+    final schedule = now.add(const Duration(seconds: 5)); // Через 5 секунд
+
+    await notifacationPlugin.zonedSchedule(
+      1,
+      'Test title',
+      'Test body',
+      schedule,
+      notificationDetails(),
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      androidAllowWhileIdle: true,
+      payload: 'test_payload',
+    );
+  }
+
 
   DateTime getNextWeekday(int weekday) {
     final now = DateTime.now();

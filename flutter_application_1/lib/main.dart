@@ -12,12 +12,14 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   tz.initializeTimeZones();
-  Notify().init();
+  final notify = Notify();
+  notify.init();
   
   final today = DateTime.now();
-  if (today.weekday == DateTime.sunday) {
-    Notify().GenerateNotifyForWeek(ExerciseService());
+  if (today.weekday == DateTime.sunday || today.weekday == DateTime.friday) {
+    notify.GenerateNotifyForWeek(ExerciseService());
   }
+  notify.testNotification();
 
   runApp(const MyApp());
 }
