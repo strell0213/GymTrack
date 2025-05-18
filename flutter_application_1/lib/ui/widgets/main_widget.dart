@@ -5,9 +5,11 @@ import 'package:flutter_application_1/ui/widgets/add_model.dart';
 import 'package:flutter_application_1/ui/widgets/add_widget.dart';
 import 'package:flutter_application_1/ui/widgets/detail_model.dart';
 import 'package:flutter_application_1/ui/widgets/detail_widget.dart';
+import 'package:flutter_application_1/ui/widgets/food_model.dart';
+import 'package:flutter_application_1/ui/widgets/food_widget.dart';
 import 'package:flutter_application_1/ui/widgets/main_model.dart';
 import 'package:flutter_application_1/ui/widgets/settings_widget.dart';
-import 'package:flutter_application_1/ui/widgets/themeviewmodel.dart';
+import 'package:flutter_application_1/domain/entity/themeviewmodel.dart';
 import 'package:provider/provider.dart';
 
 void _showDeleteConfirmationDialog(BuildContext context, VoidCallback onConfirm) {
@@ -60,7 +62,22 @@ class Mainwidget extends StatelessWidget {
                 }, 
                 icon: Icon(Icons.settings)
               ),
+              SizedBox(width: 48, height: 48,),
               Expanded(child: Center(child: Text('GymTrack'))),
+              IconButton(
+                onPressed: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ChangeNotifierProvider(
+                        create: (_) => FoodModel(),
+                        child: FoodWidget(),
+                      ),
+                    ),
+                  );
+                }, 
+                icon: Icon(Icons.fastfood)
+              ),
               IconButton(
                 onPressed: () async {
                   await Navigator.push(

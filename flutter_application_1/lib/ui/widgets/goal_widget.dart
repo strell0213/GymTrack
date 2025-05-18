@@ -5,7 +5,7 @@ import 'package:flutter_application_1/domain/services/exercise_service.dart';
 import 'package:flutter_application_1/ui/widgets/goal_add_model.dart';
 import 'package:flutter_application_1/ui/widgets/goal_add_widget.dart';
 import 'package:flutter_application_1/ui/widgets/goal_model.dart';
-import 'package:flutter_application_1/ui/widgets/themeviewmodel.dart';
+import 'package:flutter_application_1/domain/entity/themeviewmodel.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 

@@ -6,7 +6,7 @@ import 'package:flutter_application_1/ui/widgets/goal_model.dart';
 import 'package:flutter_application_1/ui/widgets/goal_widget.dart';
 import 'package:flutter_application_1/ui/widgets/statistic_model.dart';
 import 'package:flutter_application_1/ui/widgets/statistic_widget.dart';
-import 'package:flutter_application_1/ui/widgets/themeviewmodel.dart';
+import 'package:flutter_application_1/domain/entity/themeviewmodel.dart';
 import 'package:provider/provider.dart';
 
 class DetailWidget extends StatelessWidget {

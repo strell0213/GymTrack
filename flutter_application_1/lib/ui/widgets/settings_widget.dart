@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/ui/widgets/themeviewmodel.dart';
+import 'package:flutter_application_1/domain/entity/themeviewmodel.dart';
 import 'package:provider/provider.dart';
 
 class SettingsWidget extends StatelessWidget {

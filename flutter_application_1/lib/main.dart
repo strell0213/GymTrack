@@ -4,7 +4,7 @@ import 'package:flutter_application_1/domain/services/exercise_service.dart';
 import 'package:flutter_application_1/domain/services/history_service.dart';
 import 'package:flutter_application_1/ui/widgets/main_model.dart';
 import 'package:flutter_application_1/ui/widgets/main_widget.dart';
-import 'package:flutter_application_1/ui/widgets/themeviewmodel.dart';
+import 'package:flutter_application_1/domain/entity/themeviewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
