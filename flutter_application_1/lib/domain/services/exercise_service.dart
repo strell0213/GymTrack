@@ -81,4 +81,40 @@ class ExerciseService {
     final exercises = await loadExercises();
     return exercises.length;
   }
+
+  Future<List<String>?> getTypesStr(int day) async
+  {
+    String dday = '';
+    if(day == 1) dday = 'mon';
+    else if(day == 2) dday = 'tue';
+    else if(day == 3) dday = 'wed';
+    else if(day == 4) dday = 'thu';
+    else if(day == 5) dday = 'fri';
+    else if(day == 6) dday = 'sat';
+    else if(day == 7) dday = 'sun';
+
+    final list = await loadExercises();
+
+    var filter = list.where((e) => e.day == dday).toList();
+    List<String> strs = [];
+    bool check=false;
+    if(filter.isEmpty) return null;
+
+    for(int i = 0; i < filter.length; i++)
+    {
+      if(strs.isEmpty) strs.add(filter[i].typeExercice);
+
+      for(var str in strs)
+      {
+        if(str == filter[i].typeExercice) check=true; 
+      }
+
+      if (!check) strs.add(filter[i].typeExercice);
+      else {
+        check = false;
+      }
+    }
+
+    return strs;
+  }
 }

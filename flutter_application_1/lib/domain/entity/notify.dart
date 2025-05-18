@@ -1,11 +1,40 @@
-import 'package:flutter_application_1/domain/entity/exercise.dart';
 import 'package:flutter_application_1/domain/services/exercise_service.dart';
+import 'package:flutter_application_1/domain/services/not_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:flutter_timezone/flutter_timezone.dart';
+
+class Not
+{
+  int _id;
+  String _date;
+  int _type; //1 - уведомления по типам упражнения
+
+  Not(this._id, this._date, this._type);
+  Map<String, dynamic> toJson() => {
+        'id': _id,
+        'date': _date,
+        'type': _type
+      };
+
+  factory Not.fromJson(Map<String, dynamic> json) {
+    return Not(
+      json['id'],
+      json['date'],
+      json['type']
+    );
+  }
+
+  int get id => _id;
+  String get date => _date;
+  int get type => _type;
+}
 
 class Notify 
 {
   final notifacationPlugin = FlutterLocalNotificationsPlugin();
+  final NotService notService = NotService();
 
   bool _isInit = false;
 
@@ -13,6 +42,10 @@ class Notify
 
   Future<void> init() async{
     if(_isInit) return;
+
+    tz.initializeTimeZones();
+    final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(currentTimeZone));
 
     const initSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -62,55 +95,69 @@ class Notify
     required String title,
     required String body,
     required DateTime scheduledDate,
-  }) async {
+  }) async 
+  {
+    var date = tz.TZDateTime(
+      tz.local,
+      scheduledDate.year,
+      scheduledDate.month,
+      scheduledDate.day,
+      8,
+      0,
+    );
     await notifacationPlugin.zonedSchedule(
       id,
       title,
       body,
-      tz.TZDateTime.from(scheduledDate, tz.local),
-      notificationDetails(), 
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.dateAndTime,
+      date,
+      notificationDetails(),
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
     );
   }
 
   Future<void> GenerateNotifyForWeek(ExerciseService services) async
   {
-    final list = await services.loadExercises();
 
-    var filter = list.where((e) => e.day == "mon").toList();
-    List<String> strs = [];
-    bool check=false;
-    if(filter.isEmpty) return;
 
-    for(int i = 0; i < filter.length; i++)
+    for(int i = 1; i <= 7; i++)
     {
-      if(strs.isEmpty) strs.add(filter[i].typeExercice);
+      final strs = await services.getTypesStr(i);
 
-      for(var str in strs)
+      if(strs==null) continue;
+
+      String title = "Пора в зал!";
+      String body = "Сегодня у нас - ";
+      for (int i = 0; i < strs.length; i++)
       {
-        if(str == filter[i].typeExercice) check=true; 
+        body += strs[i];
+        if(i + 1 == strs.length) body += "и";
       }
 
-      if(!check) strs.add(filter[i].typeExercice);
-      else {
-        check = false;
-      }
-    }
+      Not not = Not(await notService.newID(), getNextWeekday(i).toString(), 1);
+      if (await notService.checkNot(not) == false) continue;
+      notService.addNot(not);
 
-    String title = "Пора в зал!";
-    String body = "Сегодня у нас - ";
-    for (int i = 0; i < strs.length; i++)
-    {
-      body += strs[i];
-      if(i + 1 == strs.length) body += "и";
+      await scheduleNotification(
+        id: not.id, 
+        title: title, 
+        body: body, 
+        scheduledDate: DateTime.parse(not.date)
+      );
     }
-
-    // scheduleNotification(
-    //   id: 0, 
-    //   title: title, 
-    //   body: body, 
-    //   scheduledDate: scheduledDate
-    // );
   }
+
+  DateTime getNextWeekday(int weekday) {
+    final now = DateTime.now();
+    final daysUntil = (weekday - now.weekday + 7) % 7;
+    final nextDate = now.add(Duration(days: daysUntil == 0 ? 7 : daysUntil));
+
+    return DateTime(
+      nextDate.year,
+      nextDate.month,
+      nextDate.day,
+      8, // 08:00 утра
+      0,
+    );
+  }
+
 }

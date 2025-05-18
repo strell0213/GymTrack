@@ -13,7 +13,11 @@ void main() {
 
   tz.initializeTimeZones();
   Notify().init();
-  Notify().GenerateNotifyForWeek(ExerciseService());
+  
+  final today = DateTime.now();
+  if (today.weekday == DateTime.sunday) {
+    Notify().GenerateNotifyForWeek(ExerciseService());
+  }
 
   runApp(const MyApp());
 }
