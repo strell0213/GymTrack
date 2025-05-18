@@ -19,7 +19,6 @@ void main() {
   if (today.weekday == DateTime.sunday || today.weekday == DateTime.friday) {
     notify.GenerateNotifyForWeek(ExerciseService());
   }
-  notify.testNotification();
 
   runApp(const MyApp());
 }
