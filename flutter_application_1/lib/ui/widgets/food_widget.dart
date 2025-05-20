@@ -40,8 +40,89 @@ class _ListWidget extends StatelessWidget {
         children: [
           _CalWidget(themeVM: themeVM, VM: VM),
           _PFCWidget(themeVM: themeVM, VM: VM),
+          _FoodsWidget(themeVM: themeVM, VM: VM)
         ],
       ),
+    );
+  }
+}
+
+class _FoodsWidget extends StatelessWidget {
+  const _FoodsWidget({
+    super.key,
+    required this.themeVM,
+    required this.VM,
+  });
+
+  final ThemeViewModel themeVM;
+  final FoodModel VM;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      decoration: BoxDecoration(
+        color: themeVM.isDarkTheme ? Colors.black : Colors.white,
+        border: Border.all(color: Colors.grey, width: 2),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Сегодняшняя еда', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+            SizedBox(height: 15,),
+            SizedBox(
+              height: 250,
+              child: _FoodsListWidget(VM: VM)
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FoodsListWidget extends StatelessWidget {
+  const _FoodsListWidget({
+    super.key,
+    required this.VM,
+  });
+
+  final FoodModel VM;
+
+  @override
+  Widget build(BuildContext context) {
+    final state = VM.state;
+    final foods = state.foods;
+
+    if (state.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (state.errorMessage != null) {
+      return Center(child: Text('Ошибка: ${state.errorMessage}'));
+    }
+
+    if(foods.isEmpty){
+      return Center(child: Text('Список пуст'));
+    }
+
+    return ListView.builder(
+      itemCount: foods.length,
+      itemBuilder: (BuildContext context, int index){
+        
+      }
     );
   }
 }
@@ -77,14 +158,37 @@ class _PFCWidget extends StatelessWidget {
         padding: const EdgeInsets.all(15.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _PFCTitlesWidget(),
+            SizedBox(height: 3,),
+            _PFCValueWidget(VM: VM),
+            SizedBox(height: 10,),
+            _PFCDetailsWidget(),
             SizedBox(height: 15,),
-            _PFCDetailsWidget()
           ],
         ),
       ),
+    );
+  }
+}
+
+class _PFCValueWidget extends StatelessWidget {
+  const _PFCValueWidget({
+    super.key,
+    required this.VM,
+  });
+
+  final FoodModel VM;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(child: Center(child: Text(VM.ProteinValue),)),
+        Expanded(child: Center(child: Text(VM.FatsValue),)),
+        Expanded(child: Center(child: Text(VM.Carbohydrates),))
+      ],
     );
   }
 }
@@ -99,27 +203,39 @@ class _PFCDetailsWidget extends StatelessWidget {
     return Row(
       children: [
         Expanded(child: Center(
-          child: CircularProgressIndicator(
-            value: 0.7, // 70% заполнения
-            strokeWidth: 10.0,
-            backgroundColor: Colors.grey[300],
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+          child: SizedBox(
+            width: 60,
+            height: 60,
+            child: CircularProgressIndicator(
+              value: 0.7, // 70% заполнения
+              strokeWidth: 3.0,
+              backgroundColor: Colors.grey[300],
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+            ),
           )
         )),
         Expanded(child: Center(
-          child: CircularProgressIndicator(
-            value: 0.7, // 70% заполнения
-            strokeWidth: 10.0,
-            backgroundColor: Colors.grey[300],
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+          child: SizedBox(
+            width: 60,
+            height: 60,
+            child: CircularProgressIndicator(
+              value: 0.7, // 70% заполнения
+              strokeWidth: 3.0,
+              backgroundColor: Colors.grey[300],
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+            ),
           )
         )),
         Expanded(child: Center(
-          child: CircularProgressIndicator(
-            value: 0.7, // 70% заполнения
-            strokeWidth: 10.0,
-            backgroundColor: Colors.grey[300],
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+          child: SizedBox(
+            width: 60,
+            height: 60,
+            child: CircularProgressIndicator(
+              value: 0.7, // 70% заполнения
+              strokeWidth: 3.0,
+              backgroundColor: Colors.grey[300],
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+            ),
           )
         )),
       ],

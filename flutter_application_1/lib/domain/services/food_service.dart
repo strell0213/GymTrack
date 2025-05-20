@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class FoodService {
   static const _key = 'foods';
 
-  Future<List<Food>> loadExercises() async {
+  Future<List<Food>> loadFoods() async {
     final prefs = await SharedPreferences.getInstance();
     final jsonString = prefs.getString(_key);
     if (jsonString == null) return [];
@@ -15,7 +15,7 @@ class FoodService {
     return jsonList.map((e) => Food.fromJson(e)).toList();
   }
 
-  Future<void> saveExercises(List<Food> exercises) async 
+  Future<void> saveFoods(List<Food> exercises) async 
   {
     final prefs = await SharedPreferences.getInstance();
     final jsonString =
