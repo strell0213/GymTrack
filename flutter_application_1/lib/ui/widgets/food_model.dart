@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/entity/food.dart';
+import 'package:flutter_application_1/domain/entity/themeviewmodel.dart';
 import 'package:flutter_application_1/domain/services/food_service.dart';
 
 class FoodState {
@@ -29,11 +30,17 @@ class FoodState {
 
 class FoodModel extends ChangeNotifier {
   final FoodService _foodService = FoodService();
+  final themeVM = ThemeViewModel();
 
-  String CallValue = "0";
-  String ProteinValue="0";
-  String FatsValue="0";
-  String Carbohydrates="0";
+  double CallValue = 0;
+  double ProteinValue=0;
+  double FatsValue=0;
+  double Carbohydrates=0;
+
+  double fullCall = 0;
+  double fullProtien = 0;
+  double fullFats = 0;
+  double fullCarbohydrates=0;
 
   FoodState _state = FoodState(foods: []);
   FoodState get state => _state;
@@ -41,6 +48,8 @@ class FoodModel extends ChangeNotifier {
   FoodModel()
   {
     loadFoods();
+    CheckParametrs();
+    loadSettings();
   }
 
   Future<void> loadFoods() async
@@ -48,12 +57,71 @@ class FoodModel extends ChangeNotifier {
     _setLoading(true);
     try{
       final foods = await _foodService.loadFoods();
+
+      final now = DateTime.now();
+      final filteredFoods = foods.where((x) {
+        try {
+          final foodDate = DateTime.parse(x.date);
+          return foodDate.year == now.year &&
+                foodDate.month == now.month &&
+                foodDate.day == now.day;
+        } catch (_) {
+          return false; // если дата не парсится — игнорируем
+        }
+      }).toList();
+
       _state = _state.copyWith(foods: foods, isLoading: false, errorMessage: "");
     }
     catch (e){
       _state = _state.copyWith(errorMessage: e.toString(), isLoading: false);
     }
     notifyListeners();
+  }
+
+  Future<void> loadSettings() async{
+    themeVM.load();
+    fullProtien = themeVM.weight * themeVM.oneProtein;
+    fullFats = themeVM.weight * themeVM.oneFats;
+    fullCarbohydrates = themeVM.weight * themeVM.oneCar;
+  }
+
+  Future<void> CheckParametrs() async
+  {
+    double call=0;
+    double proteins = 0;
+    double fats = 0;
+    double carbohydrates=0;
+    for(var food in state.foods)
+    {
+      call += food.calories;
+      proteins += food.proteins;
+      fats += food.fats;
+      carbohydrates += food.carbohydrates;
+    }
+
+    CallValue = call;
+    ProteinValue = proteins;
+    FatsValue = fats;
+    Carbohydrates = carbohydrates;
+    notifyListeners();
+  }
+
+  double GetNowProteins()
+  {
+    double ratio = fullProtien != 0 ? (ProteinValue / fullProtien) : 0;
+    return ratio;
+  }
+
+  double GetNowFats()
+  {
+    double ratio = fullFats != 0 ? (FatsValue / fullFats) : 0;
+    return ratio;
+  }
+
+  double GetNowCar()
+  {
+    double ratio = fullCarbohydrates != 0 ? (Carbohydrates / fullCarbohydrates) : 0;
+    return ratio;
   }
 
   void _setLoading(bool value) {
@@ -64,5 +132,10 @@ class FoodModel extends ChangeNotifier {
   void _setError(String message) {
     _state = _state.copyWith(errorMessage: message, isLoading: false);
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
