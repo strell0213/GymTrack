@@ -22,4 +22,12 @@ class FoodService {
         jsonEncode(exercises.map((e) => e.toJson()).toList());
     await prefs.setString(_key, jsonString);
   }
+
+   Future<int> newID() async{
+    final listFoods = await loadFoods(); // получаем весь список
+    if (listFoods.isEmpty) return 0;
+
+    final maxId = listFoods.map((e) => e.idFood).reduce((a, b) => a > b ? a : b);
+    return maxId + 1;
+  }
 }

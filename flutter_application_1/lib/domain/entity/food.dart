@@ -33,7 +33,7 @@ class Food {
   }
 
   int get idFood => _idFood;
-  String get name => name;
+  String get name => _name;
   double get calories => _calories;
   double get proteins => _proteins;
   double get fats => _fats;

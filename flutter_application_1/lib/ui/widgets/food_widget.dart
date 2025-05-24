@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/entity/themeviewmodel.dart';
+import 'package:flutter_application_1/ui/widgets/add_food_model.dart';
+import 'package:flutter_application_1/ui/widgets/add_food_widget.dart';
 import 'package:flutter_application_1/ui/widgets/food_model.dart';
 import 'package:flutter_application_1/ui/widgets/settingsFoods_model.dart';
 import 'package:flutter_application_1/ui/widgets/settingsFoods_widget.dart';
@@ -34,8 +36,16 @@ class FoodWidget extends StatelessWidget {
               icon: Icon(Icons.settings)
             ),
             IconButton(
-              onPressed: (){
-
+              onPressed: () async{
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ChangeNotifierProvider(
+                      create: (_) => AddFoodModel(),
+                      child: AddFoodWidget(),
+                    ),
+                  ),
+                );
               }, 
               icon: Icon(Icons.add)
             )
@@ -151,7 +161,7 @@ class _FoodsListWidget extends StatelessWidget {
       itemBuilder: (BuildContext context, int index){
         final food = foods[index];
         return Container(
-          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
             decoration: BoxDecoration(
               color: themeVM.isDarkTheme ? Colors.black : Colors.white,
               border: Border.all(color: Colors.grey, width: 2),
@@ -165,20 +175,45 @@ class _FoodsListWidget extends StatelessWidget {
                 ),
               ],
             ),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Text(food.name),
-                    Divider(),
-                    Text(food.calories.toString()),
-                    Divider(),
-                    Text(food.proteins.toString()),
-                    Divider(),
-                  ],
-                )
-              ],
-            ),
+            child: 
+            ListTile(
+              title: Text(food.name),
+              subtitle: Column(
+                children: [
+                  Column(
+                    children: [
+                      Row(
+                        children: [
+                          Text('Калории: '),
+                          Text(food.calories.toString()),
+                        ],
+                      ),
+                      SizedBox(height: 5,),
+                      Row(
+                        children: [
+                          Text('Белки: '),
+                          Text(food.proteins.toString()),
+                        ],
+                      ),
+                      SizedBox(height: 5,),
+                      Row(
+                        children: [
+                          Text('Жиры: '),
+                          Text(food.fats.toString()),
+                        ],
+                      ),
+                      SizedBox(height: 5,),
+                      Row(
+                        children: [
+                          Text('Углеводы: '),
+                          Text(food.carbohydrates.toString()),
+                        ],
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            )
         );
       }
     );

@@ -37,11 +37,11 @@ class SettingsfoodsModel extends ChangeNotifier {
     final settings = await _foodsettingsService.loadFoodSettings();
 
     settings[0].UpdateValue(
-      weightController.text as double,
-      tallController.text as double,
-      oneProteinController.text as double,
-      oneFatsController.text as double,
-      oneCarControllet.text as double);
+      double.parse(weightController.text),
+      double.parse(tallController.text),
+      double.parse(oneProteinController.text),
+      double.parse(oneFatsController.text),
+      double.parse(oneCarControllet.text));
 
     await _foodsettingsService.saveFoodSettings(settings);
     notifyListeners();

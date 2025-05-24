@@ -47,7 +47,12 @@ class FoodModel extends ChangeNotifier {
 
   FoodModel()
   {
-    loadFoods();
+    UpdateAll();
+  }
+
+  Future<void> UpdateAll() async
+  {
+    await loadFoods();
     CheckParametrs();
     loadSettings();
   }
@@ -70,7 +75,7 @@ class FoodModel extends ChangeNotifier {
         }
       }).toList();
 
-      _state = _state.copyWith(foods: filteredFoods, isLoading: false, errorMessage: "");
+      _state = _state.copyWith(foods: filteredFoods, isLoading: false, errorMessage: null);
     }
     catch (e){
       _state = _state.copyWith(errorMessage: e.toString(), isLoading: false);
