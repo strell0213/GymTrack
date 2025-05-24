@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/entity/food.dart';
-import 'package:flutter_application_1/domain/entity/themeviewmodel.dart';
+import 'package:flutter_application_1/domain/services/foodSettings_service.dart';
 import 'package:flutter_application_1/domain/services/food_service.dart';
 
 class FoodState {
@@ -30,7 +30,7 @@ class FoodState {
 
 class FoodModel extends ChangeNotifier {
   final FoodService _foodService = FoodService();
-  final themeVM = ThemeViewModel();
+  final FoodsettingsService _foodsettingsService = FoodsettingsService();
 
   double CallValue = 0;
   double ProteinValue=0;
@@ -70,7 +70,7 @@ class FoodModel extends ChangeNotifier {
         }
       }).toList();
 
-      _state = _state.copyWith(foods: foods, isLoading: false, errorMessage: "");
+      _state = _state.copyWith(foods: filteredFoods, isLoading: false, errorMessage: "");
     }
     catch (e){
       _state = _state.copyWith(errorMessage: e.toString(), isLoading: false);
@@ -79,10 +79,12 @@ class FoodModel extends ChangeNotifier {
   }
 
   Future<void> loadSettings() async{
-    themeVM.load();
-    fullProtien = themeVM.weight * themeVM.oneProtein;
-    fullFats = themeVM.weight * themeVM.oneFats;
-    fullCarbohydrates = themeVM.weight * themeVM.oneCar;
+    final settings = await _foodsettingsService.loadFoodSettings();
+    final setting = settings[0];
+
+    fullProtien = setting.weight * setting.oneProtein;
+    fullFats = setting.weight * setting.oneFats;
+    fullCarbohydrates = setting.weight * setting.oneCar;
   }
 
   Future<void> CheckParametrs() async
@@ -129,10 +131,10 @@ class FoodModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _setError(String message) {
-    _state = _state.copyWith(errorMessage: message, isLoading: false);
-    notifyListeners();
-  }
+  // void _setError(String message) {
+  //   _state = _state.copyWith(errorMessage: message, isLoading: false);
+  //   notifyListeners();
+  // }
 
   @override
   void dispose() {

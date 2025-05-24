@@ -36,15 +36,18 @@ class SettingsFoodsWidget extends StatelessWidget {
               TextField(controller: VM.oneProteinController,),
               TextField(controller: VM.oneFatsController,),
               TextField(controller: VM.oneCarControllet,),
-              TextButton(onPressed: (){
-                themeVM.saveFoods(
-                  VM.weightController as double,
-                  VM.tallController as double,
-                  VM.oneProteinController as double,
-                  VM.oneFatsController as double,
-                  VM.oneCarControllet as double
-                );
-                Navigator.pop(context);
+              TextButton(onPressed: () async{
+                if(await VM.checkEditingNULL()==true)
+                {
+                  await VM.saveFoodSettings();
+                  Navigator.pop(context);
+                }
+                else
+                {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Не все данные заполнены!')),
+                  );
+                }
               }, child: Text('Сохранить'))
             ],
           ),

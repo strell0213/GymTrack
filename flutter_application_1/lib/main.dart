@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/entity/notify.dart';
 import 'package:flutter_application_1/domain/services/exercise_service.dart';
+import 'package:flutter_application_1/domain/services/foodSettings_service.dart';
 import 'package:flutter_application_1/domain/services/history_service.dart';
 import 'package:flutter_application_1/ui/widgets/main_model.dart';
 import 'package:flutter_application_1/ui/widgets/main_widget.dart';
@@ -14,6 +15,8 @@ void main() {
   tz.initializeTimeZones();
   final notify = Notify();
   notify.init();
+
+  FoodsettingsService().checkIfNull();
   
   final today = DateTime.now();
   if (today.weekday == DateTime.sunday || today.weekday == DateTime.friday) {

@@ -52,7 +52,6 @@ class FoodWidget extends StatelessWidget {
 
 class _ListWidget extends StatelessWidget {
   const _ListWidget({
-    super.key,
     required this.themeVM,
     required this.VM,
   });
@@ -79,7 +78,6 @@ class _ListWidget extends StatelessWidget {
 
 class _FoodsWidget extends StatelessWidget {
   const _FoodsWidget({
-    super.key,
     required this.themeVM,
     required this.VM,
   });
@@ -125,7 +123,6 @@ class _FoodsWidget extends StatelessWidget {
 
 class _FoodsListWidget extends StatelessWidget {
   const _FoodsListWidget({
-    super.key,
     required this.VM, required this.themeVM,
   });
 
@@ -190,7 +187,6 @@ class _FoodsListWidget extends StatelessWidget {
 
 class _PFCWidget extends StatelessWidget {
   const _PFCWidget({
-    super.key,
     required this.themeVM,
     required this.VM,
   });
@@ -236,7 +232,6 @@ class _PFCWidget extends StatelessWidget {
 
 class _PFCValueWidget extends StatelessWidget {
   const _PFCValueWidget({
-    super.key,
     required this.VM,
   });
 
@@ -256,7 +251,7 @@ class _PFCValueWidget extends StatelessWidget {
 
 class _PFCDetailsWidget extends StatelessWidget {
   const _PFCDetailsWidget({
-    super.key, required this.VM,
+    required this.VM,
   });
 
   final FoodModel VM;
@@ -270,7 +265,7 @@ class _PFCDetailsWidget extends StatelessWidget {
             width: 60,
             height: 60,
             child: CircularProgressIndicator(
-              value: VM.GetNowProteins(), // 70% заполнения
+              value: VM.GetNowProteins(), 
               strokeWidth: 3.0,
               backgroundColor: Colors.grey[300],
               valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
@@ -282,7 +277,7 @@ class _PFCDetailsWidget extends StatelessWidget {
             width: 60,
             height: 60,
             child: CircularProgressIndicator(
-              value: 0.7, // 70% заполнения
+              value: VM.GetNowFats(), 
               strokeWidth: 3.0,
               backgroundColor: Colors.grey[300],
               valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
@@ -294,7 +289,7 @@ class _PFCDetailsWidget extends StatelessWidget {
             width: 60,
             height: 60,
             child: CircularProgressIndicator(
-              value: 0.7, // 70% заполнения
+              value: VM.GetNowCar(), 
               strokeWidth: 3.0,
               backgroundColor: Colors.grey[300],
               valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
@@ -307,9 +302,7 @@ class _PFCDetailsWidget extends StatelessWidget {
 }
 
 class _PFCTitlesWidget extends StatelessWidget {
-  const _PFCTitlesWidget({
-    super.key,
-  });
+  const _PFCTitlesWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -325,7 +318,6 @@ class _PFCTitlesWidget extends StatelessWidget {
 
 class _CalWidget extends StatelessWidget {
   const _CalWidget({
-    super.key,
     required this.themeVM,
     required this.VM,
   });

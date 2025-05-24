@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class NotService 
 {
-  static const _key='goal';
+  static const _key='not';
 
   Future<List<Not>> loadNot() async {
     final prefs = await SharedPreferences.getInstance();
