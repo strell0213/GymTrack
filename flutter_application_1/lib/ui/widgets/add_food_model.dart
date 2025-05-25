@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/entity/food.dart';
 import 'package:flutter_application_1/domain/services/food_service.dart';
+import 'package:flutter_application_1/ui/widgets/food_model.dart';
 
 class AddFoodModel extends ChangeNotifier {
   TextEditingController nameController = TextEditingController();
@@ -10,8 +11,9 @@ class AddFoodModel extends ChangeNotifier {
   TextEditingController carbohydratesController = TextEditingController();
 
   final FoodService _foodService = FoodService();
+  final FoodModel _foodModel;
 
-  AddFoodModel();
+  AddFoodModel(this._foodModel);
 
   Future<void> addNewFood() async{
     int newID = await _foodService.newID();
@@ -24,6 +26,7 @@ class AddFoodModel extends ChangeNotifier {
 
     foods.add(newFood);
     await _foodService.saveFoods(foods);
+    _foodModel.UpdateAll();
   }
 
 }

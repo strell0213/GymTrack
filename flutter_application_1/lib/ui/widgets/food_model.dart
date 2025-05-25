@@ -87,9 +87,9 @@ class FoodModel extends ChangeNotifier {
     final settings = await _foodsettingsService.loadFoodSettings();
     final setting = settings[0];
 
-    fullProtien = setting.weight * setting.oneProtein;
-    fullFats = setting.weight * setting.oneFats;
-    fullCarbohydrates = setting.weight * setting.oneCar;
+    fullProtien = (setting.weight * setting.oneProtein).roundToDouble();
+    fullFats = (setting.weight * setting.oneFats).roundToDouble();
+    fullCarbohydrates = (setting.weight * setting.oneCar).roundToDouble();
   }
 
   Future<void> CheckParametrs() async

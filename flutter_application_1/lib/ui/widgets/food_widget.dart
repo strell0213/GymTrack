@@ -20,7 +20,7 @@ class FoodWidget extends StatelessWidget {
         title: Row(
           children: [
             SizedBox(width: 48, height: 48,),
-            Expanded(child: Center(child: Text('FoodWidget'))),
+            Expanded(child: Center(child: Text('FoodTrack'))),
             IconButton(
               onPressed: () async{
                 await Navigator.push(
@@ -41,7 +41,7 @@ class FoodWidget extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (_) => ChangeNotifierProvider(
-                      create: (_) => AddFoodModel(),
+                      create: (_) => AddFoodModel(VM),
                       child: AddFoodWidget(),
                     ),
                   ),
@@ -177,11 +177,12 @@ class _FoodsListWidget extends StatelessWidget {
             ),
             child: 
             ListTile(
-              title: Text(food.name),
+              title: Text(food.name, style: TextStyle(fontWeight: FontWeight.bold),),
               subtitle: Column(
                 children: [
                   Column(
                     children: [
+                      SizedBox(height: 5,),
                       Row(
                         children: [
                           Text('Калории: '),
@@ -192,21 +193,21 @@ class _FoodsListWidget extends StatelessWidget {
                       Row(
                         children: [
                           Text('Белки: '),
-                          Text(food.proteins.toString()),
+                          Text(food.proteins.toString() + ' гр.'),
                         ],
                       ),
                       SizedBox(height: 5,),
                       Row(
                         children: [
                           Text('Жиры: '),
-                          Text(food.fats.toString()),
+                          Text(food.fats.toString() + ' гр.'),
                         ],
                       ),
                       SizedBox(height: 5,),
                       Row(
                         children: [
                           Text('Углеводы: '),
-                          Text(food.carbohydrates.toString()),
+                          Text(food.carbohydrates.toString() + ' гр.'),
                         ],
                       ),
                     ],
@@ -276,9 +277,9 @@ class _PFCValueWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(child: Center(child: Text(VM.ProteinValue.toString()),)),
-        Expanded(child: Center(child: Text(VM.FatsValue.toString()),)),
-        Expanded(child: Center(child: Text(VM.Carbohydrates.toString()),))
+        Expanded(child: Center(child: Text(VM.ProteinValue.toString() + ' / '+VM.fullProtien.toString()),)),
+        Expanded(child: Center(child: Text(VM.FatsValue.toString() + ' / '+VM.fullFats.toString()),)),
+        Expanded(child: Center(child: Text(VM.Carbohydrates.toString() + ' / '+VM.fullCarbohydrates.toString()),))
       ],
     );
   }
@@ -303,7 +304,7 @@ class _PFCDetailsWidget extends StatelessWidget {
               value: VM.GetNowProteins(), 
               strokeWidth: 3.0,
               backgroundColor: Colors.grey[300],
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+              valueColor: AlwaysStoppedAnimation<Color>(VM.GetNowProteins() <= 1.0 ? Colors.blue : Colors.red),
             ),
           )
         )),
@@ -315,7 +316,7 @@ class _PFCDetailsWidget extends StatelessWidget {
               value: VM.GetNowFats(), 
               strokeWidth: 3.0,
               backgroundColor: Colors.grey[300],
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+              valueColor: AlwaysStoppedAnimation<Color>(VM.GetNowFats() <= 1.0 ? Colors.blue : Colors.red),
             ),
           )
         )),
@@ -327,7 +328,7 @@ class _PFCDetailsWidget extends StatelessWidget {
               value: VM.GetNowCar(), 
               strokeWidth: 3.0,
               backgroundColor: Colors.grey[300],
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+              valueColor: AlwaysStoppedAnimation<Color>(VM.GetNowCar() <= 1.0 ? Colors.blue : Colors.red),
             ),
           )
         )),
