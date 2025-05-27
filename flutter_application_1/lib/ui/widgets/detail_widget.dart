@@ -15,64 +15,104 @@ class DetailWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = context.watch<DetailViewModel>();
     final themeVM = Provider.of<ThemeViewModel>(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            SizedBox(width: 48, height: 48,),
-            Expanded(child: Center(child: Text(viewModel.exercise.name))),
-            IconButton(
-              onPressed: () async {
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => ChangeNotifierProvider(
-                        create: (_) => GoalViewModal(viewModel.exercise),
-                        child: MainGoalWidget(),
-                      ),
-                    ),
-                  );
-              }, 
-              icon: Icon(Icons.star_outline_sharp)
-            ),
-            IconButton(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (!didPop) {
+          if(viewModel.isSave==true) {
+            Navigator.of(context).pop(); // Выход из экрана
+            return;
+          }
+
+          final shouldPop = await showDialog<bool>(
+            context: context,
+            builder: (BuildContext dialogContext) {
+              return AlertDialog(
+                title: const Text('Внимание'),
+                content: const Text('Вы не сохранили изменения! Сохранить?'),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('Нет'),
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop(true); // Разрешаем выход
+                    },
+                  ),
+                  TextButton(
+                    child: const Text('Да', style: TextStyle(color: Colors.red)),
+                    onPressed: () {
+                      viewModel.saveAll(context);
+                      Navigator.of(dialogContext).pop(true); // Разрешаем выход
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+
+          if (shouldPop == true) {
+            Navigator.of(context).pop(); // Выход из экрана
+          }
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Row(
+            children: [
+              SizedBox(width: 48, height: 48,),
+              Expanded(child: Center(child: Text(viewModel.exercise.name))),
+              IconButton(
                 onPressed: () async {
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => ChangeNotifierProvider(
-                        create: (_) => StatisticViewModel(viewModel.exercise, HistoryService()),
-                        child: StatisticWidget(),
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ChangeNotifierProvider(
+                          create: (_) => GoalViewModal(viewModel.exercise),
+                          child: MainGoalWidget(),
+                        ),
                       ),
-                    ),
-                  );
-                },
-                icon: Icon(Icons.analytics_outlined)
-              )
-          ],
+                    );
+                }, 
+                icon: Icon(Icons.star_outline_sharp)
+              ),
+              IconButton(
+                  onPressed: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ChangeNotifierProvider(
+                          create: (_) => StatisticViewModel(viewModel.exercise, HistoryService()),
+                          child: StatisticWidget(),
+                        ),
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.analytics_outlined)
+                )
+            ],
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Padding(
-          padding: EdgeInsets.all(15),
-          child: InfoDetailWidget(),
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Padding(
+            padding: EdgeInsets.all(15),
+            child: InfoDetailWidget(),
+          ),
         ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.all(35),
-        child: ElevatedButton(
-          onPressed: () {
-            viewModel.saveAll(context);
-            Navigator.pop(context);
-          }, 
-          child: Text('Сохранить', 
-            style: TextStyle(
-              fontWeight: FontWeight.bold, 
-              color: themeVM.isDarkTheme ? Colors.white : Colors.black,// Цвет фона
-              fontSize: 18
-            ),
-          )
+        bottomNavigationBar: Padding(
+          padding: EdgeInsets.all(35),
+          child: ElevatedButton(
+            onPressed: () {
+              viewModel.saveAll(context);
+              Navigator.pop(context);
+            }, 
+            child: Text('Сохранить', 
+              style: TextStyle(
+                fontWeight: FontWeight.bold, 
+                color: themeVM.isDarkTheme ? Colors.white : Colors.black,// Цвет фона
+                fontSize: 18
+              ),
+            )
+          ),
         ),
       ),
     );
@@ -123,6 +163,7 @@ class HowDidWidget extends StatelessWidget {
             labelText: 'Как делать упражнение?',
             alignLabelWithHint: true, // <-- Это нужно, чтобы label не плавал в центре
           ),
+          onChanged: (value) => viewModel.isSave=false,
         ),
         SizedBox(height: 5,),
       ],
@@ -154,6 +195,7 @@ class WeightCountWidget extends StatelessWidget {
               border: OutlineInputBorder(),
               labelText: 'Введите вес',
             ),
+            onChanged: (value) => viewModel.isSave=false,
           ),
         ),
         SizedBox(width: 5,),
@@ -171,6 +213,7 @@ class WeightCountWidget extends StatelessWidget {
               border: OutlineInputBorder(),
               labelText: 'Введите повторения',
             ),
+            onChanged: (value) => viewModel.isSave=false,
           ),
         )
       ],
@@ -194,6 +237,7 @@ class NameWidget extends StatelessWidget {
             border: OutlineInputBorder(),
             labelText: 'Введите наименование',
           ),
+          onChanged: (value) => viewModel.isSave=false,
         ),
         SizedBox(height: 5,),
       ],

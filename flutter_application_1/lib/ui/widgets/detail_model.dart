@@ -6,6 +6,8 @@ class DetailViewModel extends ChangeNotifier {
   final Exercise exercise;
   final ExerciseViewModel exerciseVM;
 
+  bool isSave=true;
+
   final TextEditingController nameController = TextEditingController();
   final TextEditingController weightController = TextEditingController();
   final TextEditingController howDidController = TextEditingController();
@@ -26,6 +28,7 @@ class DetailViewModel extends ChangeNotifier {
     }
     exercise.howDid = howDidController.text;
     exerciseVM.updateExercise(exercise);
+    isSave=true;
     _showSnackBar(context);
   }
 
