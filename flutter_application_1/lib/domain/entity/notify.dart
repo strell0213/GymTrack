@@ -132,8 +132,9 @@ class Notify
       for (int i = 0; i < strs.length; i++)
       {
         body += strs[i];
-        if(i + 1 != strs.length) body += "и";
+        if(i + 1 != strs.length) body += " и ";
       }
+      body+="! 💪";
 
       Not not = Not(await notService.newID(), getNextWeekday(i).toString(), 1);
       if (await notService.checkNot(not) == false) continue;
