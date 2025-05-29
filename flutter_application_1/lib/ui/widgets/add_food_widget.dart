@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_1/domain/entity/food.dart';
 import 'package:flutter_application_1/domain/entity/themeviewmodel.dart';
 import 'package:flutter_application_1/ui/widgets/add_food_model.dart';
 import 'package:provider/provider.dart';
@@ -16,10 +17,12 @@ class AddFoodWidget extends StatelessWidget {
         title: Text('Новая позиция'),
       ),
       body: SizedBox(
-        height: 500,
         child: PageView(
           children:[
-            _AddWidget(themeVM: themeVM, VM: VM),
+            SizedBox(
+              height: 500,
+              child: _AddWidget(themeVM: themeVM, VM: VM)
+            ),
             _ChooseWidget(themeVM: themeVM, VM: VM)
           ]
         ),
@@ -60,12 +63,143 @@ class _ChooseWidget extends StatelessWidget {
           children: [
             Text('Список выбранных продуктов'),
             
-            ElevatedButton(onPressed: (){
-
+            SizedBox(
+              height: 690,
+              child: _ListFoodsWidget(VM: VM, themeVM: themeVM,)
+            ),
+            SizedBox(height: 10,),
+            ElevatedButton(onPressed: ()async{
+              await VM.addChooseFood();
+              Navigator.pop(context);
             }, child: Text('Выбрать выбранные позиции'))
           ],
         ),
       ),
+    );
+  }
+}
+
+class _ListFoodsWidget extends StatelessWidget {
+  _ListFoodsWidget({
+    required this.VM, required this.themeVM,
+  });
+
+  final AddFoodModel VM;
+  final ThemeViewModel themeVM;
+  @override
+  Widget build(BuildContext context) {
+    final state = VM.state;
+    final foods = state.foods;
+
+    if (state.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (state.errorMessage != null) {
+      return Center(child: Text('Ошибка: ${state.errorMessage}'));
+    }
+
+    if(foods.isEmpty){
+      return Center(child: Text('Список целей пуст'));
+    }
+
+    return ListView.builder(
+      itemCount: foods.length,
+      itemBuilder: (BuildContext context, int index)
+      {
+        final food = foods[index];
+        return Container(
+          margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+            decoration: BoxDecoration(
+              color: themeVM.isDarkTheme ? Colors.black : Colors.white,
+              border: Border.all(color: Colors.grey, width: 2),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: 
+            ListTile(
+              title: _TitleListFoodsWidget(food: food),
+              subtitle: Column(
+                children: [
+                  Column(
+                    children: [
+                      SizedBox(height: 5,),
+                      Row(
+                        children: [
+                          Text('Калории: '),
+                          Text(food.calories.toString()),
+                        ],
+                      ),
+                      SizedBox(height: 5,),
+                      Row(
+                        children: [
+                          Text('Белки: '),
+                          Text(food.proteins.toString() + ' гр.'),
+                        ],
+                      ),
+                      SizedBox(height: 5,),
+                      Row(
+                        children: [
+                          Text('Жиры: '),
+                          Text(food.fats.toString() + ' гр.'),
+                        ],
+                      ),
+                      SizedBox(height: 5,),
+                      Row(
+                        children: [
+                          Text('Углеводы: '),
+                          Text(food.carbohydrates.toString() + ' гр.'),
+                        ],
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            )
+        );
+      }
+    );
+  }
+}
+
+class _TitleListFoodsWidget extends StatefulWidget {
+  const _TitleListFoodsWidget({
+    required this.food,
+  });
+
+  final Food food;
+
+  @override
+  State<_TitleListFoodsWidget> createState() => _TitleListFoodsWidgetState();
+}
+
+class _TitleListFoodsWidgetState extends State<_TitleListFoodsWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Checkbox(
+          value: widget.food.isCheckForAdd, onChanged: (val){
+            widget.food.isCheckForAdd = val!;
+            setState(() {
+              
+            });
+          }),
+        SizedBox(width: 5,),
+        Text(
+          widget.food.name.length > 20 ?
+          '${widget.food.name.substring(0,20)}..' : 
+          widget.food.name, 
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ],
     );
   }
 }

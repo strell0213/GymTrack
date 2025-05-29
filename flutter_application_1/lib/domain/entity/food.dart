@@ -6,6 +6,7 @@ class Food {
   double _fats;
   double _carbohydrates;
   String _date;
+  bool _isCheckForAdd=false;
 
   Food(this._idFood, this._name, this._calories, this._proteins, this._fats, this._carbohydrates, this._date);
 
@@ -39,4 +40,11 @@ class Food {
   double get fats => _fats;
   double get carbohydrates => _carbohydrates;
   String get date => _date; 
+
+  bool get isCheckForAdd => _isCheckForAdd;
+
+  set isCheckForAdd(bool value)
+  {
+    _isCheckForAdd = value;
+  }
 }
