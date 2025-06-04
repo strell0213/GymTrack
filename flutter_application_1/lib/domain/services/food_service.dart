@@ -30,4 +30,16 @@ class FoodService {
     final maxId = listFoods.map((e) => e.idFood).reduce((a, b) => a > b ? a : b);
     return maxId + 1;
   }
+
+  Future<void> updateFood(Food food) async{
+    final listFoods = await loadFoods(); // получаем весь список
+    for(int i = 0; i < listFoods.length; i++)
+    {
+      if(listFoods[i].idFood == food.idFood)
+      {
+        listFoods[i] = food;
+      }
+    }
+    await saveFoods(listFoods);
+  }
 }

@@ -18,12 +18,16 @@ class AddFoodWidget extends StatelessWidget {
       ),
       body: SizedBox(
         child: PageView(
+          pageSnapping: !VM.isEdit,
           children:[
             SizedBox(
-              height: 500,
+              height: 400,
               child: _AddWidget(themeVM: themeVM, VM: VM)
             ),
-            _ChooseWidget(themeVM: themeVM, VM: VM)
+            Visibility(
+              visible: !VM.isEdit,
+              child: _ChooseWidget(themeVM: themeVM, VM: VM)
+            )
           ]
         ),
       )
@@ -62,9 +66,8 @@ class _ChooseWidget extends StatelessWidget {
         child: Column(
           children: [
             Text('Список выбранных продуктов'),
-            
             SizedBox(
-              height: 690,
+              height: 600,
               child: _ListFoodsWidget(VM: VM, themeVM: themeVM,)
             ),
             SizedBox(height: 10,),
@@ -289,22 +292,25 @@ class _AddWidget extends StatelessWidget {
             ),
             SizedBox(height: 15,),
             ElevatedButton(onPressed: () async{
-                await VM.addNewFood();
+                VM.isEdit ? await VM.editFood() : await VM.addNewFood();
                 Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(
               elevation: 4,
               shadowColor: Colors.grey,
             ), 
-              child: Text('Добавить'),
+              child: Text(VM.isEdit ? 'Редактировать' : 'Добавить'),
             ),
             SizedBox(height: 15,),
-            Row(
-              children: [
-                Expanded(child: Text('')),
-                Text('Swipe ➡️'),
-                SizedBox(width: 10),
-              ],
+            Visibility(
+              visible: !VM.isEdit,
+              child: Row(
+                children: [
+                  Expanded(child: Text('')),
+                  Text('Swipe ➡️'),
+                  SizedBox(width: 10),
+                ],
+              ),
             ),
           ],
         ),

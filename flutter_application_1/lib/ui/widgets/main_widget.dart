@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/entity/exercise.dart';
 import 'package:flutter_application_1/domain/entity/goal.dart';
+import 'package:flutter_application_1/ui/dialogs/dialogs.dart';
 import 'package:flutter_application_1/ui/widgets/add_model.dart';
 import 'package:flutter_application_1/ui/widgets/add_widget.dart';
 import 'package:flutter_application_1/ui/widgets/detail_model.dart';
@@ -12,32 +13,7 @@ import 'package:flutter_application_1/ui/widgets/settings_widget.dart';
 import 'package:flutter_application_1/domain/entity/themeviewmodel.dart';
 import 'package:provider/provider.dart';
 
-void _showDeleteConfirmationDialog(BuildContext context, VoidCallback onConfirm) {
-  showDialog(
-    context: context,
-    builder: (BuildContext dialogContext) {
-      return AlertDialog(
-        title: const Text('Удаление'),
-        content: const Text('Вы уверены, что хотите удалить?'),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('Отмена'),
-            onPressed: () {
-              Navigator.of(dialogContext).pop(); // Закрыть диалог
-            },
-          ),
-          TextButton(
-            child: const Text('Удалить', style: TextStyle(color: Colors.red)),
-            onPressed: () {
-              Navigator.of(dialogContext).pop(); // Закрыть диалог
-              onConfirm(); // Выполнить удаление
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
+DialogClass dialog = DialogClass();
 
 class Mainwidget extends StatelessWidget {
   const Mainwidget({super.key});
@@ -264,7 +240,7 @@ class _RightButtons extends StatelessWidget {
         child: IconButton(
           icon: const Icon(Icons.delete),
           onPressed: () {
-            _showDeleteConfirmationDialog(context, () {
+            dialog.showDeleteConfirmationDialog(context, () {
               context.read<ExerciseViewModel>().deleteExercise(exercise);
             });
           },

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/entity/themeviewmodel.dart';
+import 'package:flutter_application_1/ui/dialogs/dialogs.dart';
 import 'package:flutter_application_1/ui/widgets/add_food_model.dart';
 import 'package:flutter_application_1/ui/widgets/add_food_widget.dart';
 import 'package:flutter_application_1/ui/widgets/food_model.dart';
 import 'package:flutter_application_1/ui/widgets/settingsFoods_model.dart';
 import 'package:flutter_application_1/ui/widgets/settingsFoods_widget.dart';
 import 'package:provider/provider.dart';
+
+DialogClass dialog = DialogClass();
 
 class FoodWidget extends StatelessWidget {
   const FoodWidget({super.key});
@@ -41,7 +44,7 @@ class FoodWidget extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (_) => ChangeNotifierProvider(
-                      create: (_) => AddFoodModel(VM),
+                      create: (_) => AddFoodModel(VM, false, null),
                       child: AddFoodWidget(),
                     ),
                   ),
@@ -180,35 +183,67 @@ class _FoodsListWidget extends StatelessWidget {
               title: Text(food.name, style: TextStyle(fontWeight: FontWeight.bold),),
               subtitle: Column(
                 children: [
-                  Column(
+                  SizedBox(height: 5,),
+                  Row(
                     children: [
-                      SizedBox(height: 5,),
-                      Row(
-                        children: [
-                          Text('Калории: '),
-                          Text(food.calories.toString()),
-                        ],
-                      ),
-                      SizedBox(height: 5,),
-                      Row(
-                        children: [
-                          Text('Белки: '),
-                          Text(food.proteins.toString() + ' гр.'),
-                        ],
-                      ),
-                      SizedBox(height: 5,),
-                      Row(
-                        children: [
-                          Text('Жиры: '),
-                          Text(food.fats.toString() + ' гр.'),
-                        ],
-                      ),
-                      SizedBox(height: 5,),
-                      Row(
-                        children: [
-                          Text('Углеводы: '),
-                          Text(food.carbohydrates.toString() + ' гр.'),
-                        ],
+                      Text('Калории: '),
+                      Text(food.calories.toString()),
+                    ],
+                  ),
+                  SizedBox(height: 5,),
+                  Row(
+                    children: [
+                      Text('Белки: '),
+                      Text(food.proteins.toString() + ' гр.'),
+                    ],
+                  ),
+                  SizedBox(height: 5,),
+                  Row(
+                    children: [
+                      Text('Жиры: '),
+                      Text(food.fats.toString() + ' гр.'),
+                    ],
+                  ),
+                  SizedBox(height: 5,),
+                  Row(
+                    children: [
+                      Text('Углеводы: '),
+                      Text(food.carbohydrates.toString() + ' гр.'),
+                    ],
+                  ),
+                  SizedBox(height: 15,),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              onPressed: () async{
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => ChangeNotifierProvider(
+                                      create: (_) => AddFoodModel(VM, true, food),
+                                      child: AddFoodWidget(),
+                                    ),
+                                  ),
+                                );
+                              }, 
+                              icon: Icon(Icons.edit)
+                            ),
+                            SizedBox(width: 120,),
+                            IconButton(
+                              onPressed: (){
+                                dialog.showDeleteConfirmationDialog(context, (){
+                                  VM.deleteFood(food);
+                                });
+                              }, 
+                              icon: Icon(Icons.delete)
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   )

@@ -47,4 +47,24 @@ class Food {
   {
     _isCheckForAdd = value;
   }
+
+  set calories(double value)
+  {
+    _calories = value;
+  }
+
+  set proteins(double value)
+  {
+    _proteins = value;
+  }
+
+  set fats(double value)
+  {
+    _fats = value;
+  }
+
+  set carbohydrates(double value)
+  {
+    _carbohydrates = value;
+  }
 }

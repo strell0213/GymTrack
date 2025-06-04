@@ -131,15 +131,24 @@ class FoodModel extends ChangeNotifier {
     return ratio;
   }
 
+  Future<void> deleteFood(Food food) async
+  {
+    final foods = await _foodService.loadFoods();
+    for(int i = 0; i < foods.length; i++)
+    {
+      if(foods[i].idFood == food.idFood)
+      {
+        foods.removeAt(i);
+      }
+    }
+    await _foodService.saveFoods(foods);
+    await UpdateAll();
+  }
+
   void _setLoading(bool value) {
     _state = _state.copyWith(isLoading: value, errorMessage: null);
     notifyListeners();
   }
-
-  // void _setError(String message) {
-  //   _state = _state.copyWith(errorMessage: message, isLoading: false);
-  //   notifyListeners();
-  // }
 
   @override
   void dispose() {

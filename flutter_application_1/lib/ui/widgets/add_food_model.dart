@@ -37,9 +37,17 @@ class AddFoodModel extends ChangeNotifier {
   final FoodService _foodService = FoodService();
   final FoodModel _foodModel;
 
-  AddFoodModel(this._foodModel){
+  bool isEdit = false;
+  Food? curFood = null;
+
+  AddFoodModel(this._foodModel, this.isEdit, this.curFood){
     _state = AddFoodState(foods: []);
-    GetFoodsList();
+    if(isEdit)
+    {
+      setFood();
+    }
+    else GetFoodsList();
+
   }
 
   AddFoodState get state => _state;
@@ -70,6 +78,25 @@ class AddFoodModel extends ChangeNotifier {
     foods.add(newFood);
     await _foodService.saveFoods(foods);
     _foodModel.UpdateAll();
+  }
+
+  Future<void> editFood() async{
+    curFood!.calories = double.parse(caloriesController.text);
+    curFood!.proteins = double.parse(proteinsController.text);
+    curFood!.fats = double.parse(fatsController.text);
+    curFood!.carbohydrates = double.parse(carbohydratesController.text);
+
+    await _foodService.updateFood(curFood!);
+    _foodModel.UpdateAll();
+  }
+
+  Future<void> setFood() async{
+    nameController.text = curFood!.name.toString();
+    caloriesController.text = curFood!.calories.toString();
+    proteinsController.text = curFood!.proteins.toString();
+    fatsController.text = curFood!.fats.toString();
+    carbohydratesController.text = curFood!.carbohydrates.toString();
+    notifyListeners();
   }
 
   Future<void> addChooseFood() async{
