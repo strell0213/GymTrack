@@ -38,6 +38,7 @@ class AddFoodModel extends ChangeNotifier {
   final FoodModel _foodModel;
 
   bool isEdit = false;
+  bool viewButton=false;
   Food? curFood = null;
 
   AddFoodModel(this._foodModel, this.isEdit, this.curFood){

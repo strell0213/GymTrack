@@ -5,9 +5,14 @@ import 'package:flutter_application_1/domain/entity/themeviewmodel.dart';
 import 'package:flutter_application_1/ui/widgets/add_food_model.dart';
 import 'package:provider/provider.dart';
 
-class AddFoodWidget extends StatelessWidget {
+class AddFoodWidget extends StatefulWidget {
   const AddFoodWidget({super.key});
 
+  @override
+  State<AddFoodWidget> createState() => _AddFoodWidgetState();
+}
+
+class _AddFoodWidgetState extends State<AddFoodWidget> {
   @override
   Widget build(BuildContext context) {
     final VM = context.watch<AddFoodModel>();
@@ -16,19 +21,49 @@ class AddFoodWidget extends StatelessWidget {
       appBar: AppBar(
         title: Text('Новая позиция'),
       ),
-      body: SizedBox(
-        child: PageView(
-          pageSnapping: !VM.isEdit,
-          children:[
-            SizedBox(
-              height: 400,
-              child: _AddWidget(themeVM: themeVM, VM: VM)
+      body: Column(
+        children:[ 
+          Expanded(
+            child: PageView(
+              onPageChanged: (value) {
+                if(value == 1) VM.viewButton = true;
+                else VM.viewButton = false;
+
+                setState(() {
+                  
+                });
+              },
+              pageSnapping: !VM.isEdit,
+              children:[
+                SizedBox(
+                  height: 400,
+                  child: _AddWidget(themeVM: themeVM, VM: VM)
+                ),
+                Visibility(
+                  visible: !VM.isEdit,
+                  child: _ChooseWidget(themeVM: themeVM, VM: VM)
+                )
+              ]
             ),
-            Visibility(
-              visible: !VM.isEdit,
-              child: _ChooseWidget(themeVM: themeVM, VM: VM)
-            )
-          ]
+          ),
+        ]
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Visibility(
+          visible: VM.viewButton,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 25, right: 25, bottom: 25),
+            child: ElevatedButton(
+              // color: Colors.green,
+              // hoverColor: Colors.grey,
+              onPressed: ()async{
+                await VM.addChooseFood();
+                Navigator.pop(context);
+              }, 
+              child: Icon(Icons.check),
+              // icon: Icon(Icons.check),
+            ),
+          ),
         ),
       )
     );
@@ -46,37 +81,15 @@ class _ChooseWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      decoration: BoxDecoration(
-        color: themeVM.isDarkTheme ? Colors.black : Colors.white,
-        border: Border.all(color: Colors.grey, width: 2),
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: [
-            Text('Список выбранных продуктов'),
-            SizedBox(
-              height: 600,
-              child: _ListFoodsWidget(VM: VM, themeVM: themeVM,)
-            ),
-            SizedBox(height: 10,),
-            ElevatedButton(onPressed: ()async{
-              await VM.addChooseFood();
-              Navigator.pop(context);
-            }, child: Text('Выбрать выбранные позиции'))
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Список продуктов', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
+          SizedBox(height: 5,),
+          Expanded(child: _ListFoodsWidget(VM: VM, themeVM: themeVM,)),
+        ],
       ),
     );
   }
@@ -218,8 +231,32 @@ class _AddWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Новый продукт', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
+          SizedBox(height: 5,),
+          _FieldsToAddWidget(themeVM: themeVM, VM: VM),
+        ],
+      ),
+    );
+  }
+}
+
+class _FieldsToAddWidget extends StatelessWidget {
+  const _FieldsToAddWidget({
+    required this.themeVM,
+    required this.VM,
+  });
+
+  final ThemeViewModel themeVM;
+  final AddFoodModel VM;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       decoration: BoxDecoration(
         color: themeVM.isDarkTheme ? Colors.black : Colors.white,
         border: Border.all(color: Colors.grey, width: 2),
@@ -300,17 +337,6 @@ class _AddWidget extends StatelessWidget {
               shadowColor: Colors.grey,
             ), 
               child: Text(VM.isEdit ? 'Редактировать' : 'Добавить'),
-            ),
-            SizedBox(height: 15,),
-            Visibility(
-              visible: !VM.isEdit,
-              child: Row(
-                children: [
-                  Expanded(child: Text('')),
-                  Text('Swipe ➡️'),
-                  SizedBox(width: 10),
-                ],
-              ),
             ),
           ],
         ),
